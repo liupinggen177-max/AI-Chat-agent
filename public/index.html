@@ -1661,8 +1661,12 @@
 
             while ((match = agentNamePattern.exec(message)) !== null) {
                 const mentionedName = match[1].trim();
-                const agent = Object.values(agents).find(a => a.name.toLowerCase() === mentionedName.toLowerCase());
-                if (agent && session.members.includes(agent.id)) {
+                const agent = Object.values(agents).find(a => 
+                    a.name.toLowerCase() === mentionedName.toLowerCase() ||
+                    mentionedName.toLowerCase().includes(a.name.toLowerCase()) ||
+                    a.name.toLowerCase().includes(mentionedName.toLowerCase())
+                );
+                if (agent && session.members.includes(agent.id) && !mentionedAgents.includes(agent.id)) {
                     mentionedAgents.push(agent.id);
                 }
             }
