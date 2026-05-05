@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .agent-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .agent-selector select {
+            padding: 8px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+            min-width: 150px;
+        }
+
+        .agent-selector select option {
+            color: #333;
+            background: white;
+        }
+
+        .main-content {
+            display: flex;
+            height: 600px;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #fafafa;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-section {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sidebar-header {
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f0f0f0;
+        }
+
+        .sidebar-header h3 {
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .sidebar-header button {
+            padding: 5px 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .session-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .session-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+        }
+
+        .session-item:hover {
+            background: #e8e8e8;
+        }
+
+        .session-item.active {
+            background: rgba(102, 126, 234, 0.15);
+            border-left: 3px solid #667eea;
+        }
+
+        .session-title {
+            font-size: 13px;
+            color: #333;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .session-delete {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 5px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .session-item:hover .session-delete {
+            opacity: 1;
+        }
+
+        .session-delete:hover {
+            color: #c33;
+        }
+
+        .agent-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .agent-card {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .agent-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .agent-card.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+
+        .agent-card h4 {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .agent-card .status {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .agent-card .status.configured {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .agent-card .status.not-configured {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .agent-card p {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .agent-card .model-info {
+            font-size: 10px;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .agent-card .actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        .agent-card .actions button {
+            flex: 1;
+            padding: 5px 8px;
+            border: none;
+            border-radius: 5px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .agent-card .actions .edit-btn {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .agent-card .actions .delete-btn {
+            background: #fee;
+            color: #c33;
+        }
+
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 80%;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            background: #667eea;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.assistant {
+            background: white;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .message .sender {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .input-area {
+            padding: 15px 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-area input:focus {
+            border-color: #667eea;
+        }
+
+        .input-area button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .input-area button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .input-area button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .context-bar {
+            padding: 8px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .context-bar button {
+            padding: 5px 10px;
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .form-section {
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .form-section h4 {
+            font-size: 13px;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 9px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 70px;
+            resize: vertical;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .modal-buttons .save-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .modal-buttons .cancel-btn {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 12px 16px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            border-bottom-left-radius: 4px;
+            max-width: 80%;
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .debug-info {
+            margin-top: 10px;
+            padding: 8px;
+            background: #f5f5f5;
+            border-radius: 6px;
+            font-size: 11px;
+            max-height: 120px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .test-section {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .test-section button {
+            flex: 1;
+            padding: 7px;
+            background: #666;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: 300px;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI Chat Agent</h1>
+            <div class="agent-selector">
+                <label>Agent:</label>
+                <select id="currentAgent">
+                    <option value="default">Assistant</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-header">
+                        <h3>💬 Sessions</h3>
+                        <button onclick="startNewSession()">+ New</button>
+                    </div>
+                    <div class="session-list" id="sessionList">
+                        <div style="padding: 10px; color: #888; font-size: 12px; text-align: center;">No sessions yet</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-header" style="background: #f5f5f5;">
+                    <h3 style="font-size: 13px;">🤖 My Agents</h3>
+                    <button onclick="openAgentModal()">+ New</button>
+                </div>
+                <div class="agent-list" id="agentList"></div>
+            </div>
+
+            <div class="chat-area">
+                <div class="messages" id="messages">
+                    <div class="message assistant">
+                        <div class="sender">Assistant</div>
+                        Hello! I'm your AI assistant. Start a new session to begin chatting.
+                    </div>
+                </div>
+                <div class="input-area">
+                    <input type="text" id="messageInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+                    <button id="sendBtn" onclick="sendMessage()">Send</button>
+                </div>
+                <div class="context-bar">
+                    <span>Context: <span id="contextCount">0</span> messages</span>
+                    <button onclick="clearContext()">Clear Context</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="agentModal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Create New Agent</h2>
+            <input type="hidden" id="agentId">
+
+            <div class="form-section">
+                <h4>Basic Info</h4>
+                <div class="form-group">
+                    <label>Agent Name *</label>
+                    <input type="text" id="agentName" placeholder="e.g., Coding Assistant">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="agentDescription" placeholder="Brief description">
+                </div>
+                <div class="form-group">
+                    <label>System Prompt *</label>
+                    <textarea id="agentPrompt" placeholder="Define the agent's behavior..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h4>API Configuration</h4>
+                <div class="form-group">
+                    <label>API URL *</label>
+                    <input type="text" id="agentApiUrl" placeholder="e.g., https://api.example.com">
+                </div>
+                <div class="form-group">
+                    <label>API Key *</label>
+                    <input type="password" id="agentApiKey" placeholder="Your API key">
+                </div>
+                <div class="form-group">
+                    <label>Model *</label>
+                    <select id="agentModel">
+                        <option value="">Select model...</option>
+                    </select>
+                </div>
+                <div class="test-section">
+                    <button onclick="testCurrentAgentApi()">🔧 Test</button>
+                    <button onclick="fetchModelsForAgent()">📋 Models</button>
+                </div>
+                <div id="agentDebugInfo" class="debug-info"></div>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="cancel-btn" onclick="closeAgentModal()">Cancel</button>
+                <button class="save-btn" onclick="saveAgent()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chatHistory = [];
+        let agents = {};
+        let currentAgentId = 'default';
+        let currentSessionId = null;
+        const MAX_HISTORY = 50;
+
+        function generateSessionId() {
+            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function getAllSessions() {
+            return JSON.parse(localStorage.getItem('chatSessions') || '{}');
+        }
+
+        function saveAllSessions(sessions) {
+            localStorage.setItem('chatSessions', JSON.stringify(sessions));
+        }
+
+        function createNewSession(agentId, firstMessage = 'New Chat') {
+            const sessions = getAllSessions();
+            if (!sessions[agentId]) {
+                sessions[agentId] = {};
+            }
+            
+            const sessionId = generateSessionId();
+            sessions[agentId][sessionId] = {
+                title: firstMessage.substring(0, 30) || 'New Chat',
+                history: [],
+                createdAt: Date.now()
+            };
+            
+            saveAllSessions(sessions);
+            return sessionId;
+        }
+
+        function getSession(agentId, sessionId) {
+            const sessions = getAllSessions();
+            return sessions[agentId] ? sessions[agentId][sessionId] : null;
+        }
+
+        function saveCurrentSession() {
+            if (!currentAgentId || !currentSessionId) return;
+            
+            const sessions = getAllSessions();
+            if (!sessions[currentAgentId]) {
+                sessions[currentAgentId] = {};
+            }
+            if (!sessions[currentAgentId][currentSessionId]) {
+                sessions[currentAgentId][currentSessionId] = { title: 'New Chat', history: [], createdAt: Date.now() };
+            }
+            sessions[currentAgentId][currentSessionId].history = chatHistory;
+            
+            if (chatHistory.length > 0) {
+                const firstUserMsg = chatHistory.find(m => m.role === 'user');
+                if (firstUserMsg) {
+                    sessions[currentAgentId][currentSessionId].title = firstUserMsg.content.substring(0, 30);
+                }
+            }
+            
+            saveAllSessions(sessions);
+        }
+
+        function deleteSession(agentId, sessionId) {
+            const sessions = getAllSessions();
+            if (sessions[agentId] && sessions[agentId][sessionId]) {
+                delete sessions[agentId][sessionId];
+                saveAllSessions(sessions);
+            }
+        }
+
+        async function loadAgents() {
+            try {
+                const response = await fetch('/api/agents');
+                const data = await response.json();
+                if (data.success) {
+                    agents = data.agents;
+                    renderAgentList();
+                    updateAgentSelector();
+                }
+            } catch (error) {
+                console.error('Failed to load agents:', error);
+            }
+        }
+
+        function renderSessionList() {
+            const sessions = getAllSessions();
+            const agentSessions = sessions[currentAgentId] || {};
+            const sessionList = document.getElementById('sessionList');
+            sessionList.innerHTML = '';
+
+            const sessionIds = Object.keys(agentSessions).sort((a, b) => 
+                (agentSessions[b].createdAt || 0) - (agentSessions[a].createdAt || 0)
+            );
+
+            if (sessionIds.length === 0) {
+                sessionList.innerHTML = '<div style="padding: 10px; color: #888; font-size: 12px; text-align: center;">No sessions yet</div>';
+                return;
+            }
+
+            sessionIds.forEach(id => {
+                const session = agentSessions[id];
+                const div = document.createElement('div');
+                div.className = `session-item ${id === currentSessionId ? 'active' : ''}`;
+                div.onclick = () => switchSession(id);
+                div.innerHTML = `
+                    <span class="session-title">${session.title || 'New Chat'}</span>
+                    <button class="session-delete" onclick="event.stopPropagation(); removeSession('${id}')">×</button>
+                `;
+                sessionList.appendChild(div);
+            });
+        }
+
+        function switchSession(sessionId) {
+            if (currentSessionId && currentAgentId) {
+                saveCurrentSession();
+            }
+            
+            currentSessionId = sessionId;
+            const session = getSession(currentAgentId, sessionId);
+            chatHistory = session ? session.history : [];
+            renderChatHistory();
+            updateContextCount();
+            renderSessionList();
+        }
+
+        function startNewSession() {
+            if (currentSessionId && currentAgentId) {
+                saveCurrentSession();
+            }
+            
+            const sessions = getAllSessions();
+            if (!sessions[currentAgentId]) {
+                sessions[currentAgentId] = {};
+            }
+            
+            currentSessionId = generateSessionId();
+            sessions[currentAgentId][currentSessionId] = {
+                title: 'New Chat',
+                history: [],
+                createdAt: Date.now()
+            };
+            saveAllSessions(sessions);
+            
+            chatHistory = [];
+            renderChatHistory();
+            updateContextCount();
+            renderSessionList();
+        }
+
+        function removeSession(sessionId) {
+            if (!confirm('Delete this chat session?')) return;
+            
+            deleteSession(currentAgentId, sessionId);
+            
+            if (currentSessionId === sessionId) {
+                const sessions = getAllSessions();
+                const agentSessions = sessions[currentAgentId] || {};
+                const sessionIds = Object.keys(agentSessions);
+                
+                if (sessionIds.length > 0) {
+                    switchSession(sessionIds[0]);
+                } else {
+                    currentSessionId = null;
+                    chatHistory = [];
+                    renderChatHistory();
+                    updateContextCount();
+                }
+            }
+            
+            renderSessionList();
+            renderAgentList();
+        }
+
+        function renderAgentList() {
+            const list = document.getElementById('agentList');
+            list.innerHTML = '';
+            const sessions = getAllSessions();
+
+            for (const [id, agent] of Object.entries(agents)) {
+                const isConfigured = agent.apiUrl && agent.apiKey && agent.model;
+                const agentSessions = sessions[id] || {};
+                const totalMessages = Object.values(agentSessions).reduce((sum, s) => sum + (s.history ? s.history.length : 0), 0);
+                const card = document.createElement('div');
+                card.className = `agent-card ${id === currentAgentId ? 'active' : ''}`;
+                card.onclick = () => selectAgent(id);
+
+                card.innerHTML = `
+                    <h4>
+                        ${agent.name}
+                        <span class="status ${isConfigured ? 'configured' : 'not-configured'}">
+                            ${isConfigured ? '✓' : '⚠'}
+                        </span>
+                    </h4>
+                    <p>${agent.description || 'No description'}</p>
+                    <div class="model-info">${agent.model || 'No model'}</div>
+                    <div class="model-info">${Object.keys(agentSessions).length} sessions, ${totalMessages} msgs</div>
+                    <div class="actions">
+                        <button class="edit-btn" onclick="event.stopPropagation(); editAgent('${id}')">Edit</button>
+                        ${id !== 'default' ? `<button class="delete-btn" onclick="event.stopPropagation(); deleteAgent('${id}')">Delete</button>` : ''}
+                    </div>
+                `;
+
+                list.appendChild(card);
+            }
+        }
+
+        function updateAgentSelector() {
+            const selector = document.getElementById('currentAgent');
+            selector.innerHTML = '';
+
+            for (const [id, agent] of Object.entries(agents)) {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = agent.name;
+                if (id === currentAgentId) {
+                    option.selected = true;
+                }
+                selector.appendChild(option);
+            }
+        }
+
+        function selectAgent(id) {
+            if (currentSessionId && currentAgentId) {
+                saveCurrentSession();
+            }
+            
+            currentAgentId = id;
+            currentSessionId = null;
+            
+            const sessions = getAllSessions();
+            const agentSessions = sessions[id] || {};
+            const sessionIds = Object.keys(agentSessions);
+            
+            if (sessionIds.length > 0) {
+                switchSession(sessionIds[0]);
+            } else {
+                chatHistory = [];
+                renderChatHistory();
+                updateContextCount();
+                document.getElementById('messages').innerHTML = `
+                    <div class="message assistant">
+                        <div class="sender">${agents[id].name}</div>
+                        Switched to ${agents[id].name}. Start a new session to begin chatting!
+                    </div>
+                `;
+            }
+
+            renderAgentList();
+            updateAgentSelector();
+            renderSessionList();
+        }
+
+        function openAgentModal(agentId = null) {
+            const modal = document.getElementById('agentModal');
+            const title = document.getElementById('modalTitle');
+            const debugInfo = document.getElementById('agentDebugInfo');
+            debugInfo.style.display = 'none';
+            
+            const modelSelect = document.getElementById('agentModel');
+            modelSelect.innerHTML = '<option value="">Select model...</option>';
+
+            if (agentId) {
+                title.textContent = 'Edit Agent';
+                const agent = agents[agentId];
+                document.getElementById('agentId').value = agentId;
+                document.getElementById('agentName').value = agent.name;
+                document.getElementById('agentDescription').value = agent.description || '';
+                document.getElementById('agentPrompt').value = agent.systemPrompt;
+                document.getElementById('agentApiUrl').value = agent.apiUrl || '';
+                document.getElementById('agentApiKey').value = agent.apiKey || '';
+                
+                if (agent.model) {
+                    const opt = document.createElement('option');
+                    opt.value = agent.model;
+                    opt.textContent = agent.model;
+                    opt.selected = true;
+                    modelSelect.appendChild(opt);
+                }
+            } else {
+                title.textContent = 'Create New Agent';
+                document.getElementById('agentId').value = '';
+                document.getElementById('agentName').value = '';
+                document.getElementById('agentDescription').value = '';
+                document.getElementById('agentPrompt').value = '';
+                document.getElementById('agentApiUrl').value = '';
+                document.getElementById('agentApiKey').value = '';
+            }
+
+            modal.classList.add('show');
+        }
+
+        function closeAgentModal() {
+            document.getElementById('agentModal').classList.remove('show');
+        }
+
+        async function saveAgent() {
+            const id = document.getElementById('agentId').value || document.getElementById('agentName').value.toLowerCase().replace(/\s+/g, '-');
+            const name = document.getElementById('agentName').value.trim();
+            const description = document.getElementById('agentDescription').value.trim();
+            const systemPrompt = document.getElementById('agentPrompt').value.trim();
+            const apiUrl = document.getElementById('agentApiUrl').value.trim();
+            const apiKey = document.getElementById('agentApiKey').value.trim();
+            const model = document.getElementById('agentModel').value.trim();
+
+            if (!name || !systemPrompt) {
+                alert('Please fill in required fields (name and system prompt)');
+                return;
+            }
+
+            if (!apiUrl || !apiKey || !model) {
+                alert('Please configure API settings (URL, Key, and Model)');
+                return;
+            }
+
+            const isEditing = !!document.getElementById('agentId').value;
+
+            try {
+                const response = await fetch(isEditing ? `/api/agents/${id}` : '/api/agents', {
+                    method: isEditing ? 'PUT' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, name, description, systemPrompt, apiUrl, apiKey, model })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    agents[id] = data.agent;
+                    renderAgentList();
+                    updateAgentSelector();
+                    closeAgentModal();
+
+                    if (id === currentAgentId) {
+                        selectAgent(id);
+                    }
+                } else {
+                    alert('Failed to save agent: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error saving agent:', error);
+            }
+        }
+
+        function editAgent(id) {
+            openAgentModal(id);
+        }
+
+        async function deleteAgent(id) {
+            if (!confirm('Are you sure you want to delete this agent?')) return;
+
+            try {
+                const response = await fetch(`/api/agents/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    delete agents[id];
+                    if (currentAgentId === id) {
+                        selectAgent('default');
+                    }
+                    renderAgentList();
+                    updateAgentSelector();
+                } else {
+                    alert('Failed to delete agent: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error deleting agent:', error);
+            }
+        }
+
+        async function testCurrentAgentApi() {
+            const apiUrl = document.getElementById('agentApiUrl').value.trim();
+            const apiKey = document.getElementById('agentApiKey').value.trim();
+            const model = document.getElementById('agentModel').value.trim();
+
+            if (!apiUrl || !apiKey) {
+                showAgentDebug('Please enter API URL and Key first', 'error');
+                return;
+            }
+
+            showAgentDebug('Testing API connection...', 'info');
+
+            try {
+                const response = await fetch(`${apiUrl}/v1/chat/completions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: model || 'gpt-3.5-turbo',
+                        messages: [{ role: 'user', content: 'Hi' }],
+                        max_tokens: 5
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showAgentDebug('✓ API connection successful!', 'success');
+                } else {
+                    showAgentDebug(`✗ API error: ${data.error?.message || 'Unknown error'}`, 'error');
+                }
+            } catch (error) {
+                showAgentDebug(`✗ Network error: ${error.message}`, 'error');
+            }
+        }
+
+        async function fetchModelsForAgent() {
+            const apiUrl = document.getElementById('agentApiUrl').value.trim();
+            const apiKey = document.getElementById('agentApiKey').value.trim();
+
+            if (!apiUrl || !apiKey) {
+                showAgentDebug('Please enter API URL and Key first', 'error');
+                return;
+            }
+
+            showAgentDebug('Fetching models...', 'info');
+
+            try {
+                const response = await fetch('/api/models', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ apiUrl, apiKey })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.models && data.models.length > 0) {
+                    const modelSelect = document.getElementById('agentModel');
+                    const currentValue = modelSelect.value;
+                    modelSelect.innerHTML = '<option value="">Select model...</option>';
+                    
+                    data.models.forEach(m => {
+                        const opt = document.createElement('option');
+                        opt.value = String(m);
+                        opt.textContent = String(m);
+                        modelSelect.appendChild(opt);
+                    });
+                    
+                    if (currentValue) {
+                        modelSelect.value = currentValue;
+                    }
+                    
+                    showAgentDebug(`✓ Found ${data.models.length} models.`, 'success');
+                } else {
+                    showAgentDebug(`✗ Failed: ${data.error || 'Unknown error'}`, 'error');
+                }
+            } catch (error) {
+                showAgentDebug(`✗ Network error: ${error.message}`, 'error');
+            }
+        }
+
+        function showAgentDebug(message, type) {
+            const debugInfo = document.getElementById('agentDebugInfo');
+            debugInfo.style.display = 'block';
+            const color = type === 'success' ? 'green' : type === 'error' ? 'red' : '#666';
+            debugInfo.innerHTML = `<span style="color: ${color};">${message}</span>`;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function renderChatHistory() {
+            const messagesDiv = document.getElementById('messages');
+            const agent = agents[currentAgentId] || { name: 'Assistant' };
+
+            if (chatHistory.length === 0) {
+                messagesDiv.innerHTML = `
+                    <div class="message assistant">
+                        <div class="sender">${agent.name}</div>
+                        Hello! I'm ${agent.name}. Start a new session to begin chatting!
+                    </div>
+                `;
+                return;
+            }
+
+            messagesDiv.innerHTML = '';
+            chatHistory.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${msg.role}`;
+                messageDiv.innerHTML = `
+                    <div class="sender">${msg.role === 'user' ? 'You' : agent.name}</div>
+                    ${escapeHtml(msg.content)}
+                `;
+                messagesDiv.appendChild(messageDiv);
+            });
+        }
+
+        function updateContextCount() {
+            const count = document.getElementById('contextCount');
+            count.textContent = chatHistory.length;
+        }
+
+        function clearContext() {
+            if (chatHistory.length === 0) return;
+
+            if (confirm('Clear all conversation context? This cannot be undone.')) {
+                chatHistory = [];
+                saveCurrentSession();
+                renderChatHistory();
+                updateContextCount();
+            }
+        }
+
+        async function sendMessage() {
+            const agent = agents[currentAgentId];
+
+            if (!agent.apiUrl || !agent.apiKey || !agent.model) {
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'message error';
+                errorMsg.innerHTML = '<div class="sender">Error</div>Please configure API settings for this agent first';
+                document.getElementById('messages').appendChild(errorMsg);
+                document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+                return;
+            }
+
+            if (!currentSessionId) {
+                currentSessionId = createNewSession(currentAgentId, 'New Chat');
+                renderSessionList();
+            }
+
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            const messagesDiv = document.getElementById('messages');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            userMessage.innerHTML = `<div class="sender">You</div>${escapeHtml(message)}`;
+            messagesDiv.appendChild(userMessage);
+
+            chatHistory.push({ role: 'user', content: message });
+            saveCurrentSession();
+            renderSessionList();
+            input.value = '';
+
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            typingIndicator.innerHTML = '<span></span><span></span><span></span>';
+            messagesDiv.appendChild(typingIndicator);
+            typingIndicator.style.display = 'block';
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        agentId: currentAgentId,
+                        history: chatHistory.slice(-MAX_HISTORY)
+                    })
+                });
+
+                const data = await response.json();
+                typingIndicator.remove();
+
+                if (data.success) {
+                    const assistantMessage = document.createElement('div');
+                    assistantMessage.className = 'message assistant';
+                    assistantMessage.innerHTML = `<div class="sender">${data.agent.name}</div>${escapeHtml(data.message)}`;
+                    messagesDiv.appendChild(assistantMessage);
+                    chatHistory.push({ role: 'assistant', content: data.message });
+                    saveCurrentSession();
+                    updateContextCount();
+                    renderSessionList();
+                } else {
+                    const errorMessage = document.createElement('div');
+                    errorMessage.className = 'message error';
+                    errorMessage.innerHTML = `<div class="sender">Error</div>${escapeHtml(data.error)}`;
+                    messagesDiv.appendChild(errorMessage);
+                }
+            } catch (error) {
+                typingIndicator.remove();
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'message error';
+                errorMessage.innerHTML = '<div class="sender">Error</div>Network error. Please try again.';
+                messagesDiv.appendChild(errorMessage);
+            }
+
+            sendBtn.disabled = false;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        document.getElementById('currentAgent').addEventListener('change', (e) => {
+            selectAgent(e.target.value);
+        });
+
+        loadAgents().then(() => {
+            if (currentAgentId) {
+                const sessions = getAllSessions();
+                const agentSessions = sessions[currentAgentId] || {};
+                const sessionIds = Object.keys(agentSessions);
+                
+                if (sessionIds.length > 0) {
+                    switchSession(sessionIds[0]);
+                }
+            }
+            renderSessionList();
+        });
+    </script>
+</body>
+</html>
