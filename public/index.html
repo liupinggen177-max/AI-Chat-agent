@@ -1656,25 +1656,30 @@
 
         async function sendGroupMessage(session, message, files = []) {
             const mentionedAgents = [];
-            const agentNamePattern = /@([\w\u4e00-\u9fa5][\w\u4e00-\u9fa5\s()]*?)(?=\s|$|。|，|！|？)/g;
+            const agentNamePattern = /@([\w\u4e00-\u9fa5][\w\u4e00-\u9fa5\s()（）]*?)(?=\s|$|。|，|！|？)/g;
             let match;
 
             while ((match = agentNamePattern.exec(message)) !== null) {
                 const mentionedName = match[1].trim();
                 
-                const agent = Object.values(agents).find(a => 
-                    a.name.toLowerCase() === mentionedName.toLowerCase() ||
-                    mentionedName.toLowerCase().includes(a.name.toLowerCase()) ||
-                    a.name.toLowerCase().includes(mentionedName.toLowerCase())
-                );
+                const agent = Object.values(agents).find(a => {
+                    const nameLower = a.name.toLowerCase();
+                    const mentionedLower = mentionedName.toLowerCase();
+                    return nameLower === mentionedLower ||
+                           mentionedLower.includes(nameLower) ||
+                           nameLower.includes(mentionedLower) ||
+                           nameLower.replace(/[()（）]/g, '').includes(mentionedLower.replace(/[()（）]/g, ''));
+                });
                 
                 if (agent && !mentionedAgents.includes(agent.id)) {
-                    const isMember = session.members.some(m => 
-                        m === agent.id ||
-                        m === agent.name ||
-                        agent.name.includes(m) ||
-                        (m && typeof m === 'string' && agent.name.toLowerCase().includes(m.toLowerCase()))
-                    );
+                    const isMember = session.members.some(m => {
+                        if (m === agent.id || m === agent.name) return true;
+                        const mLower = m.toLowerCase();
+                        const nameLower = agent.name.toLowerCase();
+                        return nameLower.includes(mLower) ||
+                               mLower.includes(nameLower) ||
+                               nameLower.replace(/[()（）]/g, '').includes(mLower.replace(/[()（）]/g, ''));
+                    });
                     if (isMember) {
                         mentionedAgents.push(agent.id);
                     }
