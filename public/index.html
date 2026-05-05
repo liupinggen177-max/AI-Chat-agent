@@ -1013,6 +1013,12 @@
             </div>
 
             <div class="form-group">
+                <label>Your Identity (Optional)</label>
+                <input type="text" id="groupIdentityName" placeholder="Your name/role in this chat">
+                <textarea id="groupIdentityDesc" placeholder="Describe your identity, role, or background for this conversation..." rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
                 <label>Select Agents to Add</label>
                 <div id="groupMemberOptions" class="member-select"></div>
             </div>
@@ -1210,13 +1216,20 @@
                 return;
             }
 
+            const identityName = document.getElementById('groupIdentityName').value.trim();
+            const identityDesc = document.getElementById('groupIdentityDesc').value.trim();
+
             const session = {
                 id: 'session_' + Date.now(),
                 type: 'group',
                 name: name,
                 members: [...selectedGroupMembers],
                 history: [],
-                createdAt: Date.now()
+                createdAt: Date.now(),
+                identity: {
+                    name: identityName || 'You',
+                    description: identityDesc
+                }
             };
 
             sessions.push(session);
@@ -1385,12 +1398,13 @@
                 return;
             }
 
+            const identityName = session.identity?.name || null;
             session.history.forEach(msg => {
-                appendMessage(msg.role, msg.content, msg.agentId, msg.isGroup, msg.files || [], msg.timestamp);
+                appendMessage(msg.role, msg.content, msg.agentId, msg.isGroup, msg.files || [], msg.timestamp, identityName);
             });
         }
 
-        function appendMessage(role, content, agentId = null, isGroup = false, files = [], timestamp = Date.now()) {
+        function appendMessage(role, content, agentId = null, isGroup = false, files = [], timestamp = Date.now(), identityName = null) {
             const messagesDiv = document.getElementById('messages');
             const div = document.createElement('div');
             div.className = `message ${role}`;
@@ -1400,7 +1414,8 @@
             let senderHtml = '';
 
             if (role === 'user') {
-                senderHtml = `<div class="sender">👤 You <span class="message-time">${timeStr}</span></div>`;
+                const displayName = identityName || 'You';
+                senderHtml = `<div class="sender">👤 ${displayName} <span class="message-time">${timeStr}</span></div>`;
             } else if (role === 'assistant' && agent) {
                 if (isGroup) {
                     senderHtml = `<div class="sender"><span class="group-tag">👥 Group</span> <span class="agent-tag">🤖 ${agent.name}</span> <span class="message-time">${timeStr}</span></div>`;
@@ -1602,7 +1617,8 @@
             }
 
             const now = Date.now();
-            appendMessage('user', message, null, false, files, now);
+            const identityName = session.identity?.name || 'You';
+            appendMessage('user', message, null, false, files, now, identityName);
             session.history = session.history || [];
             session.history.push({ role: 'user', content: message, files: files, timestamp: now });
 
@@ -1616,7 +1632,8 @@
                         message: message,
                         agentId: session.agentId,
                         history: session.history.slice(-MAX_HISTORY),
-                        files: files
+                        files: files,
+                        identity: session.identity || {}
                     })
                 });
 
@@ -1651,7 +1668,8 @@
             }
 
             const now = Date.now();
-            appendMessage('user', message, null, true, files, now);
+            const identityName = session.identity?.name || 'You';
+            appendMessage('user', message, null, true, files, now, identityName);
             session.history = session.history || [];
             session.history.push({ role: 'user', content: message, isGroup: true, files: files, timestamp: now });
 
@@ -1687,7 +1705,8 @@
                             apiUrl: agent.apiUrl,
                             apiKey: agent.apiKey,
                             model: agent.model,
-                            files: files
+                            files: files,
+                            identity: session.identity || {}
                         })
                     });
 

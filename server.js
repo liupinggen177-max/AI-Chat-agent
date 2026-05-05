@@ -75,7 +75,7 @@ let sessions = loadSessions();
 
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message, agentId = 'default', history = [], apiUrl, apiKey, model, files = [] } = req.body;
+    const { message, agentId = 'default', history = [], apiUrl, apiKey, model, files = [], identity = {} } = req.body;
 
     if (!message && files.length === 0) {
       return res.status(400).json({ error: 'Message or files are required' });
@@ -93,6 +93,15 @@ app.post('/api/chat', async (req, res) => {
 
     if (!useModel) {
       return res.status(400).json({ error: 'Model not configured for this agent' });
+    }
+
+    let identityPrefix = '';
+    if (identity.name || identity.description) {
+      identityPrefix = `User Identity: ${identity.name || 'User'}`;
+      if (identity.description) {
+        identityPrefix += `\nDescription: ${identity.description}`;
+      }
+      identityPrefix += '\n\n';
     }
 
     const historyMessages = history.map(msg => {
@@ -121,8 +130,10 @@ app.post('/api/chat', async (req, res) => {
       }
     }
 
+    const systemContent = identityPrefix + agent.systemPrompt;
+    
     const messages = [
-      { role: 'system', content: agent.systemPrompt },
+      { role: 'system', content: systemContent },
       ...historyMessages,
       { role: 'user', content: userContent }
     ];
