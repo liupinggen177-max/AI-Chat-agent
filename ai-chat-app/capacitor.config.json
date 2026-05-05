@@ -1,0 +1,11 @@
+{
+  "appId": "com.achatbot.agent",
+  "appName": "AI Chat Agent",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": true
+  },
+  "server": {
+    "cleartext": true
+  }
+}

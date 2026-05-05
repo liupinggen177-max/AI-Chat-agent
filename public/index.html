@@ -377,6 +377,22 @@
             border: 1px solid #fcc;
         }
 
+        .retry-btn {
+            margin-top: 10px;
+            padding: 6px 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        .retry-btn:hover {
+            background: #5a6fd6;
+        }
+
         .input-area {
             padding: 15px 20px;
             background: white;
@@ -1404,7 +1420,7 @@
             });
         }
 
-        function appendMessage(role, content, agentId = null, isGroup = false, files = [], timestamp = Date.now(), identityName = null) {
+        function appendMessage(role, content, agentId = null, isGroup = false, files = [], timestamp = Date.now(), identityName = null, retry = false) {
             const messagesDiv = document.getElementById('messages');
             const div = document.createElement('div');
             div.className = `message ${role}`;
@@ -1448,9 +1464,30 @@
                 }
             });
 
-            div.innerHTML = senderHtml + '<div class="message-content">' + contentHtml + filesHtml + '</div>';
+            let retryHtml = '';
+            if (retry && agent) {
+                retryHtml = `<button class="retry-btn" onclick="retryMessage('${agentId}', ${isGroup})">🔄 Resend</button>`;
+            }
+
+            div.innerHTML = senderHtml + '<div class="message-content">' + contentHtml + filesHtml + '</div>' + retryHtml;
             messagesDiv.appendChild(div);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function retryMessage(agentId, isGroup) {
+            const session = sessions.find(s => s.id === currentSessionId);
+            if (!session) return;
+
+            const lastUserMessage = session.history.filter(h => h.role === 'user').pop();
+            if (!lastUserMessage) return;
+
+            session.history = session.history.filter(h => h !== lastUserMessage);
+            
+            if (isGroup) {
+                sendGroupMessage(session, lastUserMessage.content, lastUserMessage.files || []);
+            } else {
+                sendPrivateMessage(session, lastUserMessage.content, lastUserMessage.files || []);
+            }
         }
 
         function formatTime(timestamp) {
@@ -1644,11 +1681,11 @@
                     appendMessage('assistant', data.message, session.agentId, false);
                     session.history.push({ role: 'assistant', content: data.message, agentId: session.agentId });
                 } else {
-                    appendMessage('error', data.error);
+                    appendMessage('error', data.error, session.agentId, false, [], Date.now(), null, true);
                 }
             } catch (error) {
                 hideTypingIndicator();
-                appendMessage('error', 'Network error');
+                appendMessage('error', 'Network error', session.agentId, false, [], Date.now(), null, true);
             }
 
             saveSessionToServer(session);
@@ -1738,13 +1775,13 @@
                         appendMessage('assistant', data.message, agentId, true);
                         session.history.push({ role: 'assistant', content: data.message, agentId: agentId, isGroup: true });
                     } else {
-                        appendMessage('assistant', `Error: ${data.error}`, agentId, true);
+                        appendMessage('assistant', `Error: ${data.error}`, agentId, true, [], Date.now(), null, true);
                         session.history.push({ role: 'assistant', content: `Error: ${data.error}`, agentId: agentId, isGroup: true });
                     }
                 } catch (error) {
                     hideTypingIndicator();
                     session.history = session.history.filter(h => !(h.agentId === agentId && h.content === '...'));
-                    appendMessage('assistant', 'Network error', agentId, true);
+                    appendMessage('assistant', 'Network error', agentId, true, [], Date.now(), null, true);
                     session.history.push({ role: 'assistant', content: 'Network error', agentId: agentId, isGroup: true });
                 }
             }

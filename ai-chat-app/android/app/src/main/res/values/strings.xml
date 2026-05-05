@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AI Chat Agent</string>
+    <string name="title_activity_main">AI Chat Agent</string>
+    <string name="package_name">com.achatbot.agent</string>
+    <string name="custom_url_scheme">com.achatbot.agent</string>
+</resources>
