@@ -836,16 +836,27 @@
                 const isConfigured = agent.apiUrl && agent.apiKey && agent.model;
                 const div = document.createElement('div');
                 div.className = 'agent-card';
-                div.onclick = () => createPrivateSession(id);
 
                 div.innerHTML = `
-                    <h4>
-                        ${agent.name}
-                        <span class="status ${isConfigured ? 'configured' : 'not-configured'}">
-                            ${isConfigured ? '✓' : '⚠'}
-                        </span>
-                    </h4>
-                    <p>${agent.description || 'No description'}</p>
+                    <div style="display:flex; justify-content: space-between; align-items: start;">
+                        <div style="flex:1;" onclick="event.stopPropagation(); createPrivateSession('${id}');">
+                            <h4>
+                                ${agent.name}
+                                <span class="status ${isConfigured ? 'configured' : 'not-configured'}">
+                                    ${isConfigured ? '✓' : '⚠'}
+                                </span>
+                            </h4>
+                            <p>${agent.description || 'No description'}</p>
+                        </div>
+                        <div style="display:flex; gap: 8px;">
+                            <button onclick="event.stopPropagation(); openAgentModal('${id}');" style="padding: 4px 8px; font-size:12px; border:none; background:#667eea; color:white; border-radius:4px; cursor:pointer;">
+                                ✏️
+                            </button>
+                            <button onclick="event.stopPropagation(); deleteAgent('${id}');" style="padding: 4px 8px; font-size:12px; border:none; background:#e74c3c; color:white; border-radius:4px; cursor:pointer;">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
                 `;
 
                 list.appendChild(div);
@@ -1308,6 +1319,30 @@
             document.getElementById('agentModal').classList.remove('show');
         }
 
+        async function deleteAgent(id) {
+            if (!confirm(`确定要删除智能体 "${agents[id]?.name}" 吗？`)) return;
+
+            try {
+                const urlId = encodeURIComponent(id);
+                const response = await fetch(`/api/agents/${urlId}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    delete agents[id];
+                    sessions = sessions.filter(s => s.type !== 'private' || s.agentId !== id);
+                    saveAllData();
+                    renderAgentList();
+                    renderSessionList();
+                } else {
+                    alert('删除失败：' + data.error);
+                }
+            } catch (error) {
+                alert('删除出错：' + error.message);
+            }
+        }
+
         async function saveAgent() {
             const id = document.getElementById('editAgentId').value || document.getElementById('agentName').value.toLowerCase().replace(/\s+/g, '-');
             const name = document.getElementById('agentName').value.trim();
@@ -1330,8 +1365,8 @@
             const isEditing = !!document.getElementById('editAgentId').value;
 
             try {
-                const response = await fetch(isEditing ? `/api/agents/${id}` : '/api/agents', {
-                    method: isEditing ? 'PUT' : 'POST',
+                const response = await fetch('/api/agents', {
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id, name, description, systemPrompt, apiUrl, apiKey, model })
                 });

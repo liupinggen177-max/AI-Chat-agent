@@ -24,19 +24,23 @@ let agentConfigs = {
 
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message, agentId = 'default', history = [] } = req.body;
+    const { message, agentId = 'default', history = [], apiUrl, apiKey, model } = req.body;
 
     if (!message) {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    const agent = agentConfigs[agentId] || agentConfigs.default;
+    let agent = agentConfigs[agentId] || agentConfigs.default;
+    
+    const useApiUrl = apiUrl || agent.apiUrl;
+    const useApiKey = apiKey || agent.apiKey;
+    const useModel = model || agent.model;
 
-    if (!agent.apiUrl || !agent.apiKey) {
+    if (!useApiUrl || !useApiKey) {
       return res.status(400).json({ error: 'API not configured for this agent' });
     }
 
-    if (!agent.model) {
+    if (!useModel) {
       return res.status(400).json({ error: 'Model not configured for this agent' });
     }
 
@@ -49,14 +53,14 @@ app.post('/api/chat', async (req, res) => {
       { role: 'user', content: message }
     ];
 
-    const response = await fetch(`${agent.apiUrl}/v1/chat/completions`, {
+    const response = await fetch(`${useApiUrl}/v1/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${agent.apiKey}`
+        'Authorization': `Bearer ${useApiKey}`
       },
       body: JSON.stringify({
-        model: agent.model,
+        model: useModel,
         messages: messages,
         max_tokens: 1000,
         temperature: 0.7
