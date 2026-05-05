@@ -250,6 +250,62 @@
             color: #888;
         }
 
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #f0f0f0;
+        }
+
+        .connection-status.online {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .connection-status.online::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .connection-status.offline {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .connection-status.offline::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #f44336;
+            border-radius: 50%;
+        }
+
+        .connection-status.connecting {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .connection-status.connecting::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #ff9800;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
         .messages {
             flex: 1;
             overflow-y: auto;
@@ -290,6 +346,13 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .message .message-time {
+            font-size: 10px;
+            font-weight: 400;
+            color: #999;
+            margin-left: auto;
         }
 
         .message .sender .agent-tag {
@@ -597,6 +660,197 @@
             margin-top: 8px;
         }
 
+        .input-tools {
+            display: flex;
+            gap: 5px;
+            margin-right: 10px;
+        }
+
+        .tool-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 8px;
+            background: #f0f0f0;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tool-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .uploaded-files {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            min-height: 40px;
+        }
+
+        .uploaded-file {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .uploaded-file .remove {
+            cursor: pointer;
+            color: #999;
+        }
+
+        .uploaded-file .remove:hover {
+            color: #c33;
+        }
+
+        .message-image {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        .message-document {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #667eea;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .message-content {
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .message-content h1, .message-content h2, .message-content h3 {
+            margin-top: 10px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .message-content h1 { font-size: 1.3em; }
+        .message-content h2 { font-size: 1.2em; }
+        .message-content h3 { font-size: 1.1em; }
+
+        .message-content ul, .message-content ol {
+            margin-left: 20px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .message-content li {
+            margin-bottom: 3px;
+        }
+
+        .message-content code {
+            background: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .message-content pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 5px 0;
+        }
+
+        .message-content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .message-content blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 10px;
+            margin: 10px 0;
+            color: #666;
+            font-style: italic;
+        }
+
+        .message-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+
+        .message-content th, .message-content td {
+            border: 1px solid #ddd;
+            padding: 6px 10px;
+            text-align: left;
+        }
+
+        .message-content th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .message-content a {
+            color: #667eea;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .message-content a:hover {
+            border-bottom-color: #667eea;
+        }
+
+        .message-content del {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .message-content .inline-code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+            font-size: 0.85em;
+            color: #c7254e;
+        }
+
+        .message-content .code-block {
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .message-content .code-block code {
+            background: none;
+            padding: 0;
+            color: #ccc;
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            white-space: pre;
+        }
+
         .test-section button {
             flex: 1;
             padding: 7px;
@@ -652,6 +906,7 @@
                         <h3 id="chatTitle">Select a session</h3>
                         <div class="members" id="chatMembers"></div>
                     </div>
+                    <div id="connectionStatus" class="connection-status offline">Disconnected</div>
                 </div>
 
                 <div class="messages" id="messages">
@@ -662,12 +917,18 @@
 
                 <div class="input-area">
                     <div class="input-wrapper">
+                        <div class="input-tools">
+                            <button class="tool-btn" onclick="triggerFileUpload('image')" title="Upload Image">📷</button>
+                            <button class="tool-btn" onclick="triggerFileUpload('document')" title="Upload Document">📄</button>
+                        </div>
                         <div class="input-container">
                             <textarea id="messageInput" placeholder="Type your message... Use @name to mention an agent" rows="1" oninput="handleInput(this)" onkeydown="handleKeyDown(event, this)"></textarea>
                             <div class="mention-hint" id="mentionHint"></div>
                         </div>
                         <button id="sendBtn" class="send-btn" onclick="sendMessage()">Send</button>
                     </div>
+                    <input type="file" id="fileInput" accept="image/*,.pdf,.doc,.docx,.txt" style="display: none;" onchange="handleFileUpload(this)">
+                    <div id="uploadedFiles" class="uploaded-files"></div>
                 </div>
             </div>
         </div>
@@ -755,6 +1016,8 @@
         let mentionFilter = '';
         let mentionIndex = 0;
         const MAX_HISTORY = 50;
+        let uploadedFiles = [];
+        let pendingFiles = [];
 
         function getAllData() {
             return JSON.parse(localStorage.getItem('agentChatData') || '{"sessions":[],"agents":{}}');
@@ -837,11 +1100,14 @@
                 const div = document.createElement('div');
                 div.className = 'agent-card';
 
+                const deleteBtn = id === 'default' ? '' : `<button onclick="event.stopPropagation(); deleteAgent('${id}');" style="padding: 4px 8px; font-size:12px; border:none; background:#e74c3c; color:white; border-radius:4px; cursor:pointer;">🗑️</button>`;
+                
                 div.innerHTML = `
                     <div style="display:flex; justify-content: space-between; align-items: start;">
                         <div style="flex:1;" onclick="event.stopPropagation(); createPrivateSession('${id}');">
                             <h4>
                                 ${agent.name}
+                                ${id === 'default' ? '<span style="font-size:10px; color:#888; margin-left:4px;">(Default)</span>' : ''}
                                 <span class="status ${isConfigured ? 'configured' : 'not-configured'}">
                                     ${isConfigured ? '✓' : '⚠'}
                                 </span>
@@ -852,9 +1118,7 @@
                             <button onclick="event.stopPropagation(); openAgentModal('${id}');" style="padding: 4px 8px; font-size:12px; border:none; background:#667eea; color:white; border-radius:4px; cursor:pointer;">
                                 ✏️
                             </button>
-                            <button onclick="event.stopPropagation(); deleteAgent('${id}');" style="padding: 4px 8px; font-size:12px; border:none; background:#e74c3c; color:white; border-radius:4px; cursor:pointer;">
-                                🗑️
-                            </button>
+                            ${deleteBtn}
                         </div>
                     </div>
                 `;
@@ -995,31 +1259,89 @@
             }
 
             session.history.forEach(msg => {
-                appendMessage(msg.role, msg.content, msg.agentId, msg.isGroup);
+                appendMessage(msg.role, msg.content, msg.agentId, msg.isGroup, msg.files || [], msg.timestamp);
             });
         }
 
-        function appendMessage(role, content, agentId = null, isGroup = false) {
+        function appendMessage(role, content, agentId = null, isGroup = false, files = [], timestamp = Date.now()) {
             const messagesDiv = document.getElementById('messages');
             const div = document.createElement('div');
             div.className = `message ${role}`;
 
             const agent = agentId ? agents[agentId] : null;
+            const timeStr = formatTime(timestamp);
             let senderHtml = '';
 
             if (role === 'user') {
-                senderHtml = '<div class="sender">You</div>';
+                senderHtml = `<div class="sender">👤 You <span class="message-time">${timeStr}</span></div>`;
             } else if (role === 'assistant' && agent) {
                 if (isGroup) {
-                    senderHtml = `<div class="sender"><span class="group-tag">👥 Group</span> <span class="agent-tag">@${agent.name}</span></div>`;
+                    senderHtml = `<div class="sender"><span class="group-tag">👥 Group</span> <span class="agent-tag">🤖 ${agent.name}</span> <span class="message-time">${timeStr}</span></div>`;
                 } else {
-                    senderHtml = `<div class="sender">${agent.name}</div>`;
+                    senderHtml = `<div class="sender">🤖 ${agent.name} <span class="message-time">${timeStr}</span></div>`;
                 }
             }
 
-            div.innerHTML = senderHtml + escapeHtml(content);
+            let contentHtml = '';
+            if (typeof content === 'object' && content.parts) {
+                content.parts.forEach(part => {
+                    if (part.type === 'text') {
+                        contentHtml += renderMarkdown(part.content);
+                    } else if (part.type === 'image') {
+                        contentHtml += `<img src="${part.url}" class="message-image" alt="Image">`;
+                    } else if (part.type === 'document') {
+                        contentHtml += `<a href="${part.url}" target="_blank" class="message-document">📄 ${part.name}</a>`;
+                    }
+                });
+            } else {
+                contentHtml = renderMarkdown(content);
+            }
+
+            let filesHtml = '';
+            files.forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    filesHtml += `<img src="${file.data}" class="message-image" alt="${file.name}">`;
+                } else {
+                    filesHtml += `<a href="${file.data}" download="${file.name}" class="message-document">📄 ${file.name}</a>`;
+                }
+            });
+
+            div.innerHTML = senderHtml + '<div class="message-content">' + contentHtml + filesHtml + '</div>';
             messagesDiv.appendChild(div);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const seconds = date.getSeconds().toString().padStart(2, '0');
+            return `${hours}:${minutes}:${seconds}`;
+        }
+
+        function renderMarkdown(text) {
+            if (!text) return '';
+            let html = text
+                .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+                .replace(/<(\/?)(style|iframe|object|embed|form|input|button|script)/gi, '&lt;$1$2')
+                .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre class="code-block"><code>$2</code></pre>')
+                .replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>')
+                .replace(/#### (.+)/g, '<h4>$1</h4>')
+                .replace(/### (.+)/g, '<h3>$1</h3>')
+                .replace(/## (.+)/g, '<h2>$1</h2>')
+                .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+                .replace(/~~([^~]+)~~/g, '<del>$1</del>')
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+                .replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
+                .replace(/^- (.+)$/gm, '<li>$2</li>')
+                .replace(/^(\*|\+) (.+)$/gm, '<li>$2</li>')
+                .replace(/<li>([\s\S]*?)<\/li>/g, '<ul>$&</ul>')
+                .replace(/<\/ul>\s*<ul>/g, '')
+                .replace(/&lt;(\/?)(style|iframe|object|embed|form|input|button|script)/gi, '<$1$2')
+                .replace(/\n/g, '<br>');
+            return html;
         }
 
         function handleInput(textarea) {
@@ -1123,7 +1445,8 @@
         async function sendMessage() {
             const textarea = document.getElementById('messageInput');
             const message = textarea.value.trim();
-            if (!message || !currentSessionId) return;
+            if (!message && uploadedFiles.length === 0) return;
+            if (!currentSessionId) return;
 
             const session = sessions.find(s => s.id === currentSessionId);
             if (!session) return;
@@ -1132,23 +1455,29 @@
             mentionMode = false;
             hideMentionHint();
 
+            const filesToSend = [...uploadedFiles];
+            uploadedFiles = [];
+            document.getElementById('uploadedFiles').innerHTML = '';
+            document.getElementById('uploadedFiles').style.display = 'none';
+
             if (currentSessionType === 'private') {
-                await sendPrivateMessage(session, message);
+                await sendPrivateMessage(session, message, filesToSend);
             } else {
-                await sendGroupMessage(session, message);
+                await sendGroupMessage(session, message, filesToSend);
             }
         }
 
-        async function sendPrivateMessage(session, message) {
+        async function sendPrivateMessage(session, message, files = []) {
             const agent = agents[session.agentId];
             if (!agent || !agent.apiUrl || !agent.apiKey || !agent.model) {
                 appendMessage('error', 'Agent not configured');
                 return;
             }
 
-            appendMessage('user', message);
+            const now = Date.now();
+            appendMessage('user', message, null, false, files, now);
             session.history = session.history || [];
-            session.history.push({ role: 'user', content: message });
+            session.history.push({ role: 'user', content: message, files: files, timestamp: now });
 
             showTypingIndicator();
 
@@ -1159,7 +1488,8 @@
                     body: JSON.stringify({
                         message: message,
                         agentId: session.agentId,
-                        history: session.history.slice(-MAX_HISTORY)
+                        history: session.history.slice(-MAX_HISTORY),
+                        files: files
                     })
                 });
 
@@ -1180,9 +1510,9 @@
             saveAllData();
         }
 
-        async function sendGroupMessage(session, message) {
+        async function sendGroupMessage(session, message, files = []) {
             const mentionedAgents = [];
-            const agentNamePattern = /@([\w\u4e00-\u9fa5][\w\u4e00-\u9fa5\s]*?)(?:\s|$)/g;
+            const agentNamePattern = /@([\w\u4e00-\u9fa5][\w\u4e00-\u9fa5\s()]*?)(?:\s|$)/g;
             let match;
 
             while ((match = agentNamePattern.exec(message)) !== null) {
@@ -1193,9 +1523,10 @@
                 }
             }
 
-            appendMessage('user', message);
+            const now = Date.now();
+            appendMessage('user', message, null, true, files, now);
             session.history = session.history || [];
-            session.history.push({ role: 'user', content: message, isGroup: true });
+            session.history.push({ role: 'user', content: message, isGroup: true, files: files, timestamp: now });
 
             if (mentionedAgents.length === 0) {
                 showTypingIndicator();
@@ -1215,7 +1546,7 @@
                 session.history.push({ role: 'assistant', content: '...', agentId: agentId, isGroup: true });
 
                 try {
-                    const chatHistory = session.history.filter(h => h.role === 'user' || (h.role === 'assistant' && h.agentId === agentId)).slice(-MAX_HISTORY);
+                    const chatHistory = session.history.slice(-MAX_HISTORY);
                     const systemMsg = { role: 'system', content: agent.systemPrompt };
                     const messages = [systemMsg, ...chatHistory.filter(h => h.role !== 'system')];
 
@@ -1228,7 +1559,8 @@
                             history: messages.slice(1),
                             apiUrl: agent.apiUrl,
                             apiKey: agent.apiKey,
-                            model: agent.model
+                            model: agent.model,
+                            files: files
                         })
                     });
 
@@ -1462,6 +1794,192 @@
             const color = type === 'success' ? 'green' : type === 'error' ? 'red' : '#666';
             debugInfo.innerHTML = `<span style="color: ${color};">${message}</span>`;
         }
+
+        function triggerFileUpload(type) {
+            const fileInput = document.getElementById('fileInput');
+            if (type === 'image') {
+                fileInput.accept = 'image/*';
+            } else if (type === 'document') {
+                fileInput.accept = '.pdf,.doc,.docx,.txt,.xlsx,.xls,.ppt,.pptx';
+            } else {
+                fileInput.accept = 'image/*,.pdf,.doc,.docx,.txt,.xlsx,.xls,.ppt,.pptx';
+            }
+            fileInput.click();
+        }
+
+        function handleFileUpload(input) {
+            const files = Array.from(input.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const fileData = {
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        data: e.target.result
+                    };
+                    addUploadedFile(fileData);
+                };
+                reader.readAsDataURL(file);
+            });
+            input.value = '';
+        }
+
+        function addUploadedFile(fileData) {
+            const container = document.getElementById('uploadedFiles');
+            const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            fileData.id = fileId;
+            uploadedFiles.push(fileData);
+
+            const div = document.createElement('div');
+            div.className = 'uploaded-file';
+            div.dataset.id = fileId;
+
+            let icon = '📄';
+            if (fileData.type.startsWith('image/')) {
+                icon = '🖼️';
+            } else if (fileData.name.endsWith('.pdf')) {
+                icon = '📕';
+            } else if (fileData.name.match(/\.(doc|docx)$/)) {
+                icon = '📘';
+            } else if (fileData.name.match(/\.(xls|xlsx)$/)) {
+                icon = '📗';
+            } else if (fileData.name.match(/\.(ppt|pptx)$/)) {
+                icon = '📙';
+            }
+
+            div.innerHTML = `
+                <span>${icon}</span>
+                <span style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${fileData.name}</span>
+                <span class="remove" onclick="removeUploadedFile('${fileId}')">×</span>
+            `;
+
+            container.appendChild(div);
+            container.style.display = 'flex';
+        }
+
+        function removeUploadedFile(fileId) {
+            uploadedFiles = uploadedFiles.filter(f => f.id !== fileId);
+            const element = document.querySelector(`.uploaded-file[data-id="${fileId}"]`);
+            if (element) {
+                element.remove();
+            }
+            if (uploadedFiles.length === 0) {
+                document.getElementById('uploadedFiles').style.display = 'none';
+            }
+        }
+
+        function setConnectionStatus(status) {
+            const statusEl = document.getElementById('connectionStatus');
+            statusEl.classList.remove('online', 'offline', 'connecting');
+            
+            switch(status) {
+                case 'online':
+                    statusEl.classList.add('online');
+                    statusEl.textContent = 'Connected';
+                    break;
+                case 'offline':
+                    statusEl.classList.add('offline');
+                    statusEl.textContent = 'Disconnected';
+                    break;
+                case 'connecting':
+                    statusEl.classList.add('connecting');
+                    statusEl.textContent = 'Connecting...';
+                    break;
+            }
+        }
+
+        async function checkServerConnection() {
+            try {
+                const response = await fetch('/api/agents', {
+                    method: 'GET',
+                    timeout: 5000
+                });
+                if (response.ok) {
+                    setConnectionStatus('online');
+                    return true;
+                } else {
+                    setConnectionStatus('offline');
+                    return false;
+                }
+            } catch {
+                setConnectionStatus('offline');
+                return false;
+            }
+        }
+
+        let messageQueue = [];
+        let isProcessing = false;
+
+        async function processMessageQueue() {
+            if (isProcessing || messageQueue.length === 0) return;
+            
+            isProcessing = true;
+            const { session, message, files, callback } = messageQueue.shift();
+            
+            try {
+                await callback(session, message, files);
+            } catch (error) {
+                console.error('Message processing error:', error);
+            }
+            
+            isProcessing = false;
+            if (messageQueue.length > 0) {
+                setTimeout(processMessageQueue, 100);
+            }
+        }
+
+        async function sendMessageWithRetry(session, message, files, retries = 3) {
+            for (let attempt = 1; attempt <= retries; attempt++) {
+                try {
+                    setConnectionStatus('connecting');
+                    
+                    if (session.type === 'private') {
+                        await sendPrivateMessage(session, message, files);
+                    } else {
+                        await sendGroupMessage(session, message, files);
+                    }
+                    
+                    setConnectionStatus('online');
+                    return true;
+                } catch (error) {
+                    console.error(`Attempt ${attempt} failed:`, error);
+                    
+                    if (attempt < retries) {
+                        await new Promise(r => setTimeout(r, 2000 * attempt));
+                    } else {
+                        setConnectionStatus('offline');
+                        appendMessage('error', `Failed to send message after ${retries} attempts. Please check your connection and try again.`);
+                        return false;
+                    }
+                }
+            }
+        }
+
+        async function sendMessage() {
+            const textarea = document.getElementById('messageInput');
+            const message = textarea.value.trim();
+            if (!message && uploadedFiles.length === 0) return;
+            if (!currentSessionId) return;
+
+            const session = sessions.find(s => s.id === currentSessionId);
+            if (!session) return;
+
+            textarea.value = '';
+            mentionMode = false;
+            hideMentionHint();
+
+            const filesToSend = [...uploadedFiles];
+            uploadedFiles = [];
+            document.getElementById('uploadedFiles').innerHTML = '';
+            document.getElementById('uploadedFiles').style.display = 'none';
+
+            await sendMessageWithRetry(session, message, filesToSend);
+        }
+
+        checkServerConnection();
+        setInterval(checkServerConnection, 10000);
 
         loadData();
     </script>

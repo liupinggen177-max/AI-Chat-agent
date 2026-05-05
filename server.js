@@ -7,7 +7,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 let agentConfigs = {
@@ -24,10 +25,10 @@ let agentConfigs = {
 
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message, agentId = 'default', history = [], apiUrl, apiKey, model } = req.body;
+    const { message, agentId = 'default', history = [], apiUrl, apiKey, model, files = [] } = req.body;
 
-    if (!message) {
-      return res.status(400).json({ error: 'Message is required' });
+    if (!message && files.length === 0) {
+      return res.status(400).json({ error: 'Message or files are required' });
     }
 
     let agent = agentConfigs[agentId] || agentConfigs.default;
@@ -44,13 +45,36 @@ app.post('/api/chat', async (req, res) => {
       return res.status(400).json({ error: 'Model not configured for this agent' });
     }
 
+    const historyMessages = history.map(msg => {
+      let content = msg.content;
+      if (msg.agentId && msg.role === 'assistant') {
+        const agentName = agentConfigs[msg.agentId]?.name || msg.agentId;
+        const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : '';
+        content = `[${agentName}${timeStr ? ` @ ${timeStr}` : ''}] ${msg.content}`;
+      } else if (msg.role === 'user') {
+        const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : '';
+        content = `[User${timeStr ? ` @ ${timeStr}` : ''}] ${msg.content}`;
+      }
+      return {
+        role: msg.role,
+        content: content
+      };
+    });
+
+    let userContent = message || '';
+    if (files.length > 0) {
+      const fileInfo = files.map(f => `File: ${f.name} (${(f.size / 1024).toFixed(1)} KB)`).join(', ');
+      if (userContent) {
+        userContent = `${userContent}\n\nAttached files: ${fileInfo}`;
+      } else {
+        userContent = `Files attached: ${fileInfo}`;
+      }
+    }
+
     const messages = [
       { role: 'system', content: agent.systemPrompt },
-      ...history.map(msg => ({
-        role: msg.role,
-        content: msg.content
-      })),
-      { role: 'user', content: message }
+      ...historyMessages,
+      { role: 'user', content: userContent }
     ];
 
     const response = await fetch(`${useApiUrl}/v1/chat/completions`, {
@@ -62,13 +86,19 @@ app.post('/api/chat', async (req, res) => {
       body: JSON.stringify({
         model: useModel,
         messages: messages,
-        max_tokens: 1000,
+        max_tokens: 2000,
         temperature: 0.7
       })
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        const text = await response.text();
+        throw new Error(`API request failed: ${text.substring(0, 200)}`);
+      }
       throw new Error(errorData.error?.message || 'API request failed');
     }
 
@@ -165,7 +195,7 @@ app.put('/api/agents/:id', (req, res) => {
 });
 
 app.delete('/api/agents/:id', (req, res) => {
-  const { id } = req.params;
+  const id = decodeURIComponent(req.params.id);
 
   if (id === 'default') {
     return res.status(400).json({
