@@ -1,27 +1,53 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const AGENTS_FILE = path.join(__dirname, 'agents.json');
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-let agentConfigs = {
-  default: {
-    id: 'default',
-    name: 'Assistant',
-    description: 'Default AI assistant',
-    systemPrompt: 'You are a helpful AI assistant.',
-    apiUrl: '',
-    apiKey: '',
-    model: 'gpt-3.5-turbo'
+function loadAgentConfigs() {
+  try {
+    if (fs.existsSync(AGENTS_FILE)) {
+      const data = fs.readFileSync(AGENTS_FILE, 'utf8');
+      const parsed = JSON.parse(data);
+      if (parsed.default) {
+        console.log('Agents config loaded from file');
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load agents config:', err);
   }
-};
+  return {
+    default: {
+      id: 'default',
+      name: 'Assistant',
+      description: 'Default AI assistant',
+      systemPrompt: 'You are a helpful AI assistant.',
+      apiUrl: '',
+      apiKey: '',
+      model: 'gpt-3.5-turbo'
+    }
+  };
+}
+
+function saveAgentConfigs(configs) {
+  try {
+    fs.writeFileSync(AGENTS_FILE, JSON.stringify(configs, null, 2), 'utf8');
+  } catch (err) {
+    console.error('Failed to save agents config:', err);
+  }
+}
+
+let agentConfigs = loadAgentConfigs();
 
 app.post('/api/chat', async (req, res) => {
   try {
@@ -148,6 +174,8 @@ app.post('/api/agents', (req, res) => {
       model: model || 'gpt-3.5-turbo'
     };
 
+    saveAgentConfigs(agentConfigs);
+
     res.json({
       success: true,
       agent: agentConfigs[id]
@@ -182,6 +210,8 @@ app.put('/api/agents/:id', (req, res) => {
       model: model !== undefined ? model : agentConfigs[id].model
     };
 
+    saveAgentConfigs(agentConfigs);
+
     res.json({
       success: true,
       agent: agentConfigs[id]
@@ -212,6 +242,7 @@ app.delete('/api/agents/:id', (req, res) => {
   }
 
   delete agentConfigs[id];
+  saveAgentConfigs(agentConfigs);
   res.json({ success: true });
 });
 
