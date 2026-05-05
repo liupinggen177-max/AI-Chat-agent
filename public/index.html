@@ -22,7 +22,7 @@
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             width: 100%;
             background: white;
             border-radius: 20px;
@@ -44,32 +44,9 @@
             font-weight: 600;
         }
 
-        .agent-selector {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .agent-selector select {
-            padding: 8px 16px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            font-size: 14px;
-            cursor: pointer;
-            outline: none;
-            min-width: 150px;
-        }
-
-        .agent-selector select option {
-            color: #333;
-            background: white;
-        }
-
         .main-content {
             display: flex;
-            height: 600px;
+            height: 650px;
         }
 
         .sidebar {
@@ -80,46 +57,47 @@
             flex-direction: column;
         }
 
-        .sidebar-section {
+        .sidebar-tabs {
+            display: flex;
             border-bottom: 1px solid #e0e0e0;
         }
 
-        .sidebar-header {
-            padding: 12px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f0f0f0;
-        }
-
-        .sidebar-header h3 {
-            font-size: 14px;
-            color: #333;
-            font-weight: 600;
-        }
-
-        .sidebar-header button {
-            padding: 5px 12px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 12px;
+        .sidebar-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
             cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            background: #f5f5f5;
+            border: none;
+            outline: none;
         }
 
-        .session-list {
-            max-height: 200px;
+        .sidebar-tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .sidebar-content {
+            flex: 1;
             overflow-y: auto;
         }
 
+        .session-list {
+            padding: 10px;
+        }
+
         .session-item {
-            padding: 10px 15px;
+            padding: 10px 12px;
             cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #f0f0f0;
             transition: background 0.2s;
         }
 
@@ -132,13 +110,30 @@
             border-left: 3px solid #667eea;
         }
 
+        .session-item.group {
+            border-left: 3px solid #f39c12;
+        }
+
+        .session-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
         .session-title {
             font-size: 13px;
             color: #333;
-            flex: 1;
+            font-weight: 500;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        .session-subtitle {
+            font-size: 11px;
+            color: #888;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .session-delete {
@@ -149,46 +144,46 @@
             cursor: pointer;
             padding: 0 5px;
             opacity: 0;
-            transition: opacity 0.2s;
         }
 
         .session-item:hover .session-delete {
             opacity: 1;
         }
 
-        .session-delete:hover {
-            color: #c33;
+        .section-header {
+            padding: 10px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            background: #f0f0f0;
         }
 
         .agent-list {
-            flex: 1;
-            overflow-y: auto;
             padding: 10px;
         }
 
         .agent-card {
             background: white;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 10px;
+            border-radius: 8px;
             border: 2px solid #e0e0e0;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .agent-card:hover {
             border-color: #667eea;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
         }
 
         .agent-card.active {
             border-color: #667eea;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            background: rgba(102, 126, 234, 0.1);
         }
 
         .agent-card h4 {
-            font-size: 14px;
-            margin-bottom: 5px;
+            font-size: 13px;
             color: #333;
             display: flex;
             justify-content: space-between;
@@ -214,59 +209,58 @@
         .agent-card p {
             font-size: 11px;
             color: #666;
-            line-height: 1.4;
-            margin-bottom: 6px;
+            margin-top: 4px;
         }
 
-        .agent-card .model-info {
-            font-size: 10px;
-            color: #888;
-            margin-bottom: 4px;
-        }
-
-        .agent-card .actions {
-            display: flex;
-            gap: 5px;
-            margin-top: 8px;
-        }
-
-        .agent-card .actions button {
-            flex: 1;
-            padding: 5px 8px;
+        .new-btn {
+            width: calc(100% - 20px);
+            margin: 10px;
+            padding: 10px;
+            background: #667eea;
+            color: white;
             border: none;
-            border-radius: 5px;
-            font-size: 11px;
+            border-radius: 8px;
+            font-size: 13px;
             cursor: pointer;
-        }
-
-        .agent-card .actions .edit-btn {
-            background: #e0e0e0;
-            color: #333;
-        }
-
-        .agent-card .actions .delete-btn {
-            background: #fee;
-            color: #c33;
         }
 
         .chat-area {
             flex: 1;
             display: flex;
             flex-direction: column;
+            background: #f8f9fa;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .chat-header .members {
+            font-size: 12px;
+            color: #888;
         }
 
         .messages {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
-            background: #f8f9fa;
         }
 
         .message {
             margin-bottom: 15px;
             padding: 12px 16px;
             border-radius: 12px;
-            max-width: 80%;
+            max-width: 85%;
             line-height: 1.5;
             word-wrap: break-word;
         }
@@ -285,42 +279,110 @@
             border-bottom-left-radius: 4px;
         }
 
+        .message.group-mention {
+            border-left: 4px solid #f39c12;
+        }
+
+        .message .sender {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .message .sender .agent-tag {
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+
+        .message .sender .group-tag {
+            background: #f39c12;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+
         .message.error {
             background: #fee;
             color: #c33;
             border: 1px solid #fcc;
         }
 
-        .message .sender {
-            font-size: 12px;
-            opacity: 0.7;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-
         .input-area {
             padding: 15px 20px;
             background: white;
             border-top: 1px solid #e0e0e0;
-            display: flex;
-            gap: 10px;
         }
 
-        .input-area input {
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .input-container {
             flex: 1;
+            position: relative;
+        }
+
+        .input-container textarea {
+            width: 100%;
             padding: 12px 16px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 14px;
             outline: none;
-            transition: border-color 0.3s;
+            resize: none;
+            min-height: 50px;
+            max-height: 150px;
+            font-family: inherit;
         }
 
-        .input-area input:focus {
+        .input-container textarea:focus {
             border-color: #667eea;
         }
 
-        .input-area button {
+        .mention-hint {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+            z-index: 10;
+        }
+
+        .mention-hint.show {
+            display: block;
+        }
+
+        .mention-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .mention-item:hover {
+            background: #f0f0f0;
+        }
+
+        .mention-item.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .send-btn {
             padding: 12px 24px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -329,39 +391,46 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
         }
 
-        .input-area button:hover {
+        .send-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
 
-        .input-area button:disabled {
+        .send-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
         }
 
-        .context-bar {
-            padding: 8px 20px;
-            background: #f8f9fa;
-            border-top: 1px solid #e0e0e0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
-            color: #666;
+        .typing-indicator {
+            display: none;
+            padding: 12px 16px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            border-bottom-left-radius: 4px;
+            max-width: 80%;
         }
 
-        .context-bar button {
-            padding: 5px 10px;
-            background: #fee;
-            color: #c33;
-            border: 1px solid #fcc;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
         }
 
         .modal {
@@ -386,7 +455,7 @@
             padding: 25px;
             border-radius: 16px;
             width: 90%;
-            max-width: 550px;
+            max-width: 500px;
             max-height: 90vh;
             overflow-y: auto;
         }
@@ -443,6 +512,49 @@
             resize: vertical;
         }
 
+        .member-select {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            min-height: 50px;
+        }
+
+        .member-chip {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .member-chip .remove {
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .member-option {
+            padding: 6px 12px;
+            background: #f5f5f5;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .member-option:hover {
+            background: #e0e0e0;
+        }
+
+        .member-option.selected {
+            background: #667eea;
+            color: white;
+        }
+
         .modal-buttons {
             display: flex;
             gap: 10px;
@@ -468,50 +580,13 @@
             color: #333;
         }
 
-        .typing-indicator {
-            display: none;
-            padding: 12px 16px;
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            border-bottom-left-radius: 4px;
-            max-width: 80%;
-        }
-
-        .typing-indicator span {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #667eea;
-            border-radius: 50%;
-            margin-right: 5px;
-            animation: typing 1.4s infinite;
-        }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes typing {
-            0%, 60%, 100% {
-                transform: translateY(0);
-            }
-            30% {
-                transform: translateY(-10px);
-            }
-        }
-
         .debug-info {
             margin-top: 10px;
             padding: 8px;
             background: #f5f5f5;
             border-radius: 6px;
             font-size: 11px;
-            max-height: 120px;
+            max-height: 80px;
             overflow-y: auto;
             display: none;
         }
@@ -541,8 +616,6 @@
             .sidebar {
                 width: 100%;
                 height: 300px;
-                border-right: none;
-                border-bottom: 1px solid #e0e0e0;
             }
         }
     </style>
@@ -551,47 +624,50 @@
     <div class="container">
         <div class="header">
             <h1>🤖 AI Chat Agent</h1>
-            <div class="agent-selector">
-                <label>Agent:</label>
-                <select id="currentAgent">
-                    <option value="default">Assistant</option>
-                </select>
-            </div>
         </div>
 
         <div class="main-content">
             <div class="sidebar">
-                <div class="sidebar-section">
-                    <div class="sidebar-header">
-                        <h3>💬 Sessions</h3>
-                        <button onclick="startNewSession()">+ New</button>
-                    </div>
-                    <div class="session-list" id="sessionList">
-                        <div style="padding: 10px; color: #888; font-size: 12px; text-align: center;">No sessions yet</div>
-                    </div>
+                <div class="sidebar-tabs">
+                    <button class="sidebar-tab active" onclick="switchTab('sessions')">💬 Sessions</button>
+                    <button class="sidebar-tab" onclick="switchTab('agents')">🤖 Agents</button>
                 </div>
 
-                <div class="sidebar-header" style="background: #f5f5f5;">
-                    <h3 style="font-size: 13px;">🤖 My Agents</h3>
-                    <button onclick="openAgentModal()">+ New</button>
+                <div class="sidebar-content">
+                    <div id="sessionsTab">
+                        <button class="new-btn" onclick="showCreateGroupModal()">+ New Group Chat</button>
+                        <div class="session-list" id="sessionList"></div>
+                    </div>
+
+                    <div id="agentsTab" style="display: none;">
+                        <button class="new-btn" onclick="openAgentModal()">+ New Agent</button>
+                        <div class="agent-list" id="agentList"></div>
+                    </div>
                 </div>
-                <div class="agent-list" id="agentList"></div>
             </div>
 
             <div class="chat-area">
-                <div class="messages" id="messages">
-                    <div class="message assistant">
-                        <div class="sender">Assistant</div>
-                        Hello! I'm your AI assistant. Start a new session to begin chatting.
+                <div class="chat-header">
+                    <div>
+                        <h3 id="chatTitle">Select a session</h3>
+                        <div class="members" id="chatMembers"></div>
                     </div>
                 </div>
-                <div class="input-area">
-                    <input type="text" id="messageInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
-                    <button id="sendBtn" onclick="sendMessage()">Send</button>
+
+                <div class="messages" id="messages">
+                    <div style="text-align: center; color: #888; padding: 50px;">
+                        Select a session or create a new group chat to start
+                    </div>
                 </div>
-                <div class="context-bar">
-                    <span>Context: <span id="contextCount">0</span> messages</span>
-                    <button onclick="clearContext()">Clear Context</button>
+
+                <div class="input-area">
+                    <div class="input-wrapper">
+                        <div class="input-container">
+                            <textarea id="messageInput" placeholder="Type your message... Use @name to mention an agent" rows="1" oninput="handleInput(this)" onkeydown="handleKeyDown(event, this)"></textarea>
+                            <div class="mention-hint" id="mentionHint"></div>
+                        </div>
+                        <button id="sendBtn" class="send-btn" onclick="sendMessage()">Send</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -599,8 +675,8 @@
 
     <div class="modal" id="agentModal">
         <div class="modal-content">
-            <h2 id="modalTitle">Create New Agent</h2>
-            <input type="hidden" id="agentId">
+            <h2 id="agentModalTitle">Create New Agent</h2>
+            <input type="hidden" id="editAgentId">
 
             <div class="form-section">
                 <h4>Basic Info</h4>
@@ -648,194 +724,121 @@
         </div>
     </div>
 
+    <div class="modal" id="groupModal">
+        <div class="modal-content">
+            <h2>Create Group Chat</h2>
+
+            <div class="form-group">
+                <label>Group Name *</label>
+                <input type="text" id="groupName" placeholder="e.g., Dev Team Chat">
+            </div>
+
+            <div class="form-group">
+                <label>Select Agents to Add</label>
+                <div id="groupMemberOptions" class="member-select"></div>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="cancel-btn" onclick="closeGroupModal()">Cancel</button>
+                <button class="save-btn" onclick="createGroup()">Create</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        let chatHistory = [];
         let agents = {};
-        let currentAgentId = 'default';
+        let sessions = [];
         let currentSessionId = null;
+        let currentSessionType = null;
+        let mentionMode = false;
+        let mentionStart = 0;
+        let mentionFilter = '';
+        let mentionIndex = 0;
         const MAX_HISTORY = 50;
 
-        function generateSessionId() {
-            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        function getAllData() {
+            return JSON.parse(localStorage.getItem('agentChatData') || '{"sessions":[],"agents":{}}');
         }
 
-        function getAllSessions() {
-            return JSON.parse(localStorage.getItem('chatSessions') || '{}');
+        function saveAllData() {
+            localStorage.setItem('agentChatData', JSON.stringify({ sessions, agents }));
         }
 
-        function saveAllSessions(sessions) {
-            localStorage.setItem('chatSessions', JSON.stringify(sessions));
-        }
-
-        function createNewSession(agentId, firstMessage = 'New Chat') {
-            const sessions = getAllSessions();
-            if (!sessions[agentId]) {
-                sessions[agentId] = {};
-            }
+        function switchTab(tab) {
+            document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
             
-            const sessionId = generateSessionId();
-            sessions[agentId][sessionId] = {
-                title: firstMessage.substring(0, 30) || 'New Chat',
-                history: [],
-                createdAt: Date.now()
-            };
-            
-            saveAllSessions(sessions);
-            return sessionId;
-        }
-
-        function getSession(agentId, sessionId) {
-            const sessions = getAllSessions();
-            return sessions[agentId] ? sessions[agentId][sessionId] : null;
-        }
-
-        function saveCurrentSession() {
-            if (!currentAgentId || !currentSessionId) return;
-            
-            const sessions = getAllSessions();
-            if (!sessions[currentAgentId]) {
-                sessions[currentAgentId] = {};
-            }
-            if (!sessions[currentAgentId][currentSessionId]) {
-                sessions[currentAgentId][currentSessionId] = { title: 'New Chat', history: [], createdAt: Date.now() };
-            }
-            sessions[currentAgentId][currentSessionId].history = chatHistory;
-            
-            if (chatHistory.length > 0) {
-                const firstUserMsg = chatHistory.find(m => m.role === 'user');
-                if (firstUserMsg) {
-                    sessions[currentAgentId][currentSessionId].title = firstUserMsg.content.substring(0, 30);
-                }
-            }
-            
-            saveAllSessions(sessions);
-        }
-
-        function deleteSession(agentId, sessionId) {
-            const sessions = getAllSessions();
-            if (sessions[agentId] && sessions[agentId][sessionId]) {
-                delete sessions[agentId][sessionId];
-                saveAllSessions(sessions);
+            if (tab === 'sessions') {
+                document.getElementById('sessionsTab').style.display = 'block';
+                document.getElementById('agentsTab').style.display = 'none';
+            } else {
+                document.getElementById('sessionsTab').style.display = 'none';
+                document.getElementById('agentsTab').style.display = 'block';
             }
         }
 
-        async function loadAgents() {
+        async function loadData() {
             try {
                 const response = await fetch('/api/agents');
                 const data = await response.json();
                 if (data.success) {
                     agents = data.agents;
-                    renderAgentList();
-                    updateAgentSelector();
                 }
             } catch (error) {
                 console.error('Failed to load agents:', error);
             }
+
+            const savedData = getAllData();
+            sessions = savedData.sessions || [];
+            if (savedData.agents) {
+                agents = { ...savedData.agents, ...agents };
+            }
+
+            renderSessionList();
+            renderAgentList();
         }
 
         function renderSessionList() {
-            const sessions = getAllSessions();
-            const agentSessions = sessions[currentAgentId] || {};
-            const sessionList = document.getElementById('sessionList');
-            sessionList.innerHTML = '';
+            const list = document.getElementById('sessionList');
+            list.innerHTML = '';
 
-            const sessionIds = Object.keys(agentSessions).sort((a, b) => 
-                (agentSessions[b].createdAt || 0) - (agentSessions[a].createdAt || 0)
-            );
-
-            if (sessionIds.length === 0) {
-                sessionList.innerHTML = '<div style="padding: 10px; color: #888; font-size: 12px; text-align: center;">No sessions yet</div>';
+            if (sessions.length === 0) {
+                list.innerHTML = '<div style="padding: 20px; text-align: center; color: #888; font-size: 12px;">No sessions yet</div>';
                 return;
             }
 
-            sessionIds.forEach(id => {
-                const session = agentSessions[id];
+            sessions.forEach(session => {
+                const isGroup = session.type === 'group';
                 const div = document.createElement('div');
-                div.className = `session-item ${id === currentSessionId ? 'active' : ''}`;
-                div.onclick = () => switchSession(id);
+                div.className = `session-item ${isGroup ? 'group' : ''} ${session.id === currentSessionId ? 'active' : ''}`;
+                div.onclick = () => selectSession(session.id);
+
+                const title = isGroup ? `👥 ${session.name}` : `💬 ${agents[session.agentId]?.name || 'Agent'}`;
+                const subtitle = isGroup ? `${session.members?.length || 0} members` : 'Private chat';
+
                 div.innerHTML = `
-                    <span class="session-title">${session.title || 'New Chat'}</span>
-                    <button class="session-delete" onclick="event.stopPropagation(); removeSession('${id}')">×</button>
+                    <div class="session-info">
+                        <div class="session-title">${title}</div>
+                        <div class="session-subtitle">${subtitle}</div>
+                    </div>
+                    <button class="session-delete" onclick="event.stopPropagation(); deleteSession('${session.id}')">×</button>
                 `;
-                sessionList.appendChild(div);
+
+                list.appendChild(div);
             });
-        }
-
-        function switchSession(sessionId) {
-            if (currentSessionId && currentAgentId) {
-                saveCurrentSession();
-            }
-            
-            currentSessionId = sessionId;
-            const session = getSession(currentAgentId, sessionId);
-            chatHistory = session ? session.history : [];
-            renderChatHistory();
-            updateContextCount();
-            renderSessionList();
-        }
-
-        function startNewSession() {
-            if (currentSessionId && currentAgentId) {
-                saveCurrentSession();
-            }
-            
-            const sessions = getAllSessions();
-            if (!sessions[currentAgentId]) {
-                sessions[currentAgentId] = {};
-            }
-            
-            currentSessionId = generateSessionId();
-            sessions[currentAgentId][currentSessionId] = {
-                title: 'New Chat',
-                history: [],
-                createdAt: Date.now()
-            };
-            saveAllSessions(sessions);
-            
-            chatHistory = [];
-            renderChatHistory();
-            updateContextCount();
-            renderSessionList();
-        }
-
-        function removeSession(sessionId) {
-            if (!confirm('Delete this chat session?')) return;
-            
-            deleteSession(currentAgentId, sessionId);
-            
-            if (currentSessionId === sessionId) {
-                const sessions = getAllSessions();
-                const agentSessions = sessions[currentAgentId] || {};
-                const sessionIds = Object.keys(agentSessions);
-                
-                if (sessionIds.length > 0) {
-                    switchSession(sessionIds[0]);
-                } else {
-                    currentSessionId = null;
-                    chatHistory = [];
-                    renderChatHistory();
-                    updateContextCount();
-                }
-            }
-            
-            renderSessionList();
-            renderAgentList();
         }
 
         function renderAgentList() {
             const list = document.getElementById('agentList');
             list.innerHTML = '';
-            const sessions = getAllSessions();
 
             for (const [id, agent] of Object.entries(agents)) {
                 const isConfigured = agent.apiUrl && agent.apiKey && agent.model;
-                const agentSessions = sessions[id] || {};
-                const totalMessages = Object.values(agentSessions).reduce((sum, s) => sum + (s.history ? s.history.length : 0), 0);
-                const card = document.createElement('div');
-                card.className = `agent-card ${id === currentAgentId ? 'active' : ''}`;
-                card.onclick = () => selectAgent(id);
+                const div = document.createElement('div');
+                div.className = 'agent-card';
+                div.onclick = () => createPrivateSession(id);
 
-                card.innerHTML = `
+                div.innerHTML = `
                     <h4>
                         ${agent.name}
                         <span class="status ${isConfigured ? 'configured' : 'not-configured'}">
@@ -843,83 +846,444 @@
                         </span>
                     </h4>
                     <p>${agent.description || 'No description'}</p>
-                    <div class="model-info">${agent.model || 'No model'}</div>
-                    <div class="model-info">${Object.keys(agentSessions).length} sessions, ${totalMessages} msgs</div>
-                    <div class="actions">
-                        <button class="edit-btn" onclick="event.stopPropagation(); editAgent('${id}')">Edit</button>
-                        ${id !== 'default' ? `<button class="delete-btn" onclick="event.stopPropagation(); deleteAgent('${id}')">Delete</button>` : ''}
-                    </div>
                 `;
 
-                list.appendChild(card);
+                list.appendChild(div);
             }
         }
 
-        function updateAgentSelector() {
-            const selector = document.getElementById('currentAgent');
-            selector.innerHTML = '';
+        function showCreateGroupModal() {
+            const container = document.getElementById('groupMemberOptions');
+            container.innerHTML = '';
 
             for (const [id, agent] of Object.entries(agents)) {
-                const option = document.createElement('option');
-                option.value = id;
-                option.textContent = agent.name;
-                if (id === currentAgentId) {
-                    option.selected = true;
+                if (agent.apiUrl && agent.apiKey && agent.model) {
+                    const chip = document.createElement('div');
+                    chip.className = 'member-option';
+                    chip.dataset.id = id;
+                    chip.textContent = agent.name;
+                    chip.onclick = () => toggleGroupMember(id, chip);
+                    container.appendChild(chip);
                 }
-                selector.appendChild(option);
+            }
+
+            document.getElementById('groupName').value = '';
+            document.getElementById('groupModal').classList.add('show');
+        }
+
+        let selectedGroupMembers = [];
+
+        function toggleGroupMember(id, element) {
+            const index = selectedGroupMembers.indexOf(id);
+            if (index > -1) {
+                selectedGroupMembers.splice(index, 1);
+                element.classList.remove('selected');
+            } else {
+                selectedGroupMembers.push(id);
+                element.classList.add('selected');
             }
         }
 
-        function selectAgent(id) {
-            if (currentSessionId && currentAgentId) {
-                saveCurrentSession();
+        function createGroup() {
+            const name = document.getElementById('groupName').value.trim();
+            if (!name) {
+                alert('Please enter a group name');
+                return;
             }
-            
-            currentAgentId = id;
-            currentSessionId = null;
-            
-            const sessions = getAllSessions();
-            const agentSessions = sessions[id] || {};
-            const sessionIds = Object.keys(agentSessions);
-            
-            if (sessionIds.length > 0) {
-                switchSession(sessionIds[0]);
-            } else {
-                chatHistory = [];
-                renderChatHistory();
-                updateContextCount();
-                document.getElementById('messages').innerHTML = `
-                    <div class="message assistant">
-                        <div class="sender">${agents[id].name}</div>
-                        Switched to ${agents[id].name}. Start a new session to begin chatting!
-                    </div>
-                `;
+            if (selectedGroupMembers.length < 2) {
+                alert('Please select at least 2 agents for group chat');
+                return;
             }
 
-            renderAgentList();
-            updateAgentSelector();
+            const session = {
+                id: 'session_' + Date.now(),
+                type: 'group',
+                name: name,
+                members: [...selectedGroupMembers],
+                history: [],
+                createdAt: Date.now()
+            };
+
+            sessions.push(session);
+            saveAllData();
+            selectedGroupMembers = [];
+            closeGroupModal();
             renderSessionList();
+            selectSession(session.id);
+        }
+
+        function closeGroupModal() {
+            document.getElementById('groupModal').classList.remove('show');
+        }
+
+        function createPrivateSession(agentId) {
+            const existing = sessions.find(s => s.type === 'private' && s.agentId === agentId);
+            if (existing) {
+                selectSession(existing.id);
+                return;
+            }
+
+            const session = {
+                id: 'session_' + Date.now(),
+                type: 'private',
+                agentId: agentId,
+                history: [],
+                createdAt: Date.now()
+            };
+
+            sessions.push(session);
+            saveAllData();
+            renderSessionList();
+            selectSession(session.id);
+        }
+
+        function selectSession(id) {
+            currentSessionId = id;
+            const session = sessions.find(s => s.id === id);
+            currentSessionType = session?.type;
+
+            renderSessionList();
+            renderChat();
+        }
+
+        function deleteSession(id) {
+            if (!confirm('Delete this session?')) return;
+            sessions = sessions.filter(s => s.id !== id);
+            if (currentSessionId === id) {
+                currentSessionId = null;
+                currentSessionType = null;
+            }
+            saveAllData();
+            renderSessionList();
+            if (!currentSessionId) {
+                document.getElementById('messages').innerHTML = '<div style="text-align: center; color: #888; padding: 50px;">Select a session or create a new group chat to start</div>';
+                document.getElementById('chatTitle').textContent = 'Select a session';
+                document.getElementById('chatMembers').textContent = '';
+            }
+        }
+
+        function renderChat() {
+            const session = sessions.find(s => s.id === currentSessionId);
+            if (!session) return;
+
+            document.getElementById('chatTitle').textContent = session.type === 'group' ? `👥 ${session.name}` : `💬 ${agents[session.agentId]?.name || 'Agent'}`;
+
+            if (session.type === 'group') {
+                const memberNames = session.members.map(m => agents[m]?.name || m).join(', ');
+                document.getElementById('chatMembers').textContent = memberNames;
+            } else {
+                document.getElementById('chatMembers').textContent = 'Private chat';
+            }
+
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = '';
+
+            if (!session.history || session.history.length === 0) {
+                messagesDiv.innerHTML = '<div style="text-align: center; color: #888; padding: 50px;">Start the conversation!</div>';
+                return;
+            }
+
+            session.history.forEach(msg => {
+                appendMessage(msg.role, msg.content, msg.agentId, msg.isGroup);
+            });
+        }
+
+        function appendMessage(role, content, agentId = null, isGroup = false) {
+            const messagesDiv = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = `message ${role}`;
+
+            const agent = agentId ? agents[agentId] : null;
+            let senderHtml = '';
+
+            if (role === 'user') {
+                senderHtml = '<div class="sender">You</div>';
+            } else if (role === 'assistant' && agent) {
+                if (isGroup) {
+                    senderHtml = `<div class="sender"><span class="group-tag">👥 Group</span> <span class="agent-tag">@${agent.name}</span></div>`;
+                } else {
+                    senderHtml = `<div class="sender">${agent.name}</div>`;
+                }
+            }
+
+            div.innerHTML = senderHtml + escapeHtml(content);
+            messagesDiv.appendChild(div);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function handleInput(textarea) {
+            const value = textarea.value;
+            const cursorPos = textarea.selectionStart;
+
+            const textBeforeCursor = value.substring(0, cursorPos);
+            const atIndex = textBeforeCursor.lastIndexOf('@');
+
+            if (atIndex !== -1 && (atIndex === 0 || textBeforeCursor[atIndex - 1] === ' ')) {
+                const textAfterAt = textBeforeCursor.substring(atIndex + 1);
+                if (!textAfterAt.includes(' ') && textAfterAt.length < 30) {
+                    mentionMode = true;
+                    mentionStart = atIndex;
+                    mentionFilter = textAfterAt.toLowerCase();
+                    showMentionHint();
+                    return;
+                }
+            }
+
+            mentionMode = false;
+            hideMentionHint();
+        }
+
+        function showMentionHint() {
+            const hint = document.getElementById('mentionHint');
+            const session = sessions.find(s => s.id === currentSessionId);
+
+            let availableAgents = [];
+            if (currentSessionType === 'group' && session) {
+                availableAgents = session.members.map(m => agents[m]).filter(Boolean);
+            } else {
+                availableAgents = Object.values(agents).filter(a => a.apiUrl && a.apiKey && a.model);
+            }
+
+            const filtered = availableAgents.filter(a => a.name.toLowerCase().includes(mentionFilter));
+
+            if (filtered.length === 0) {
+                hint.classList.remove('show');
+                return;
+            }
+
+            hint.innerHTML = filtered.map((a, i) => `
+                <div class="mention-item ${i === mentionIndex ? 'active' : ''}" onclick="selectMention('${a.id}')">
+                    @${a.name}
+                </div>
+            `).join('');
+
+            hint.classList.add('show');
+        }
+
+        function hideMentionHint() {
+            document.getElementById('mentionHint').classList.remove('show');
+        }
+
+        function selectMention(agentId) {
+            const textarea = document.getElementById('messageInput');
+            const value = textarea.value;
+            const before = value.substring(0, mentionStart);
+            const after = value.substring(textarea.selectionStart);
+
+            textarea.value = before + '@' + agents[agentId].name + ' ' + after;
+            textarea.focus();
+
+            mentionMode = false;
+            mentionIndex = 0;
+            hideMentionHint();
+        }
+
+        function handleKeyDown(event, textarea) {
+            const hint = document.getElementById('mentionHint');
+
+            if (mentionMode && hint.classList.contains('show')) {
+                const items = hint.querySelectorAll('.mention-item');
+                if (event.key === 'ArrowDown') {
+                    event.preventDefault();
+                    items[mentionIndex]?.classList.remove('active');
+                    mentionIndex = (mentionIndex + 1) % items.length;
+                    items[mentionIndex]?.classList.add('active');
+                } else if (event.key === 'ArrowUp') {
+                    event.preventDefault();
+                    items[mentionIndex]?.classList.remove('active');
+                    mentionIndex = (mentionIndex - 1 + items.length) % items.length;
+                    items[mentionIndex]?.classList.add('active');
+                } else if (event.key === 'Enter' || event.key === 'Tab') {
+                    event.preventDefault();
+                    const activeItem = items[mentionIndex];
+                    if (activeItem) {
+                        activeItem.click();
+                    }
+                } else if (event.key === 'Escape') {
+                    mentionMode = false;
+                    hideMentionHint();
+                }
+            } else if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        async function sendMessage() {
+            const textarea = document.getElementById('messageInput');
+            const message = textarea.value.trim();
+            if (!message || !currentSessionId) return;
+
+            const session = sessions.find(s => s.id === currentSessionId);
+            if (!session) return;
+
+            textarea.value = '';
+            mentionMode = false;
+            hideMentionHint();
+
+            if (currentSessionType === 'private') {
+                await sendPrivateMessage(session, message);
+            } else {
+                await sendGroupMessage(session, message);
+            }
+        }
+
+        async function sendPrivateMessage(session, message) {
+            const agent = agents[session.agentId];
+            if (!agent || !agent.apiUrl || !agent.apiKey || !agent.model) {
+                appendMessage('error', 'Agent not configured');
+                return;
+            }
+
+            appendMessage('user', message);
+            session.history = session.history || [];
+            session.history.push({ role: 'user', content: message });
+
+            showTypingIndicator();
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        agentId: session.agentId,
+                        history: session.history.slice(-MAX_HISTORY)
+                    })
+                });
+
+                const data = await response.json();
+                hideTypingIndicator();
+
+                if (data.success) {
+                    appendMessage('assistant', data.message, session.agentId, false);
+                    session.history.push({ role: 'assistant', content: data.message, agentId: session.agentId });
+                } else {
+                    appendMessage('error', data.error);
+                }
+            } catch (error) {
+                hideTypingIndicator();
+                appendMessage('error', 'Network error');
+            }
+
+            saveAllData();
+        }
+
+        async function sendGroupMessage(session, message) {
+            const mentionedAgents = [];
+            const agentNamePattern = /@([\w\u4e00-\u9fa5][\w\u4e00-\u9fa5\s]*?)(?:\s|$)/g;
+            let match;
+
+            while ((match = agentNamePattern.exec(message)) !== null) {
+                const mentionedName = match[1].trim();
+                const agent = Object.values(agents).find(a => a.name.toLowerCase() === mentionedName.toLowerCase());
+                if (agent && session.members.includes(agent.id)) {
+                    mentionedAgents.push(agent.id);
+                }
+            }
+
+            appendMessage('user', message);
+            session.history = session.history || [];
+            session.history.push({ role: 'user', content: message, isGroup: true });
+
+            if (mentionedAgents.length === 0) {
+                showTypingIndicator();
+                await new Promise(r => setTimeout(r, 1000));
+                hideTypingIndicator();
+                appendMessage('assistant', 'Please mention an agent with @name to get a response', null, true);
+                session.history.push({ role: 'assistant', content: 'Please mention an agent with @name to get a response', agentId: null, isGroup: true });
+                saveAllData();
+                return;
+            }
+
+            for (const agentId of mentionedAgents) {
+                const agent = agents[agentId];
+                if (!agent || !agent.apiUrl || !agent.apiKey || !agent.model) continue;
+
+                showTypingIndicator(agent.name);
+                session.history.push({ role: 'assistant', content: '...', agentId: agentId, isGroup: true });
+
+                try {
+                    const chatHistory = session.history.filter(h => h.role === 'user' || (h.role === 'assistant' && h.agentId === agentId)).slice(-MAX_HISTORY);
+                    const systemMsg = { role: 'system', content: agent.systemPrompt };
+                    const messages = [systemMsg, ...chatHistory.filter(h => h.role !== 'system')];
+
+                    const response = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            message: message,
+                            agentId: agentId,
+                            history: messages.slice(1),
+                            apiUrl: agent.apiUrl,
+                            apiKey: agent.apiKey,
+                            model: agent.model
+                        })
+                    });
+
+                    const data = await response.json();
+                    hideTypingIndicator();
+
+                    session.history = session.history.filter(h => !(h.agentId === agentId && h.content === '...'));
+
+                    if (data.success) {
+                        appendMessage('assistant', data.message, agentId, true);
+                        session.history.push({ role: 'assistant', content: data.message, agentId: agentId, isGroup: true });
+                    } else {
+                        appendMessage('assistant', `Error: ${data.error}`, agentId, true);
+                        session.history.push({ role: 'assistant', content: `Error: ${data.error}`, agentId: agentId, isGroup: true });
+                    }
+                } catch (error) {
+                    hideTypingIndicator();
+                    session.history = session.history.filter(h => !(h.agentId === agentId && h.content === '...'));
+                    appendMessage('assistant', 'Network error', agentId, true);
+                    session.history.push({ role: 'assistant', content: 'Network error', agentId: agentId, isGroup: true });
+                }
+            }
+
+            saveAllData();
+        }
+
+        function showTypingIndicator(agentName = '') {
+            const messagesDiv = document.getElementById('messages');
+            const indicator = document.createElement('div');
+            indicator.className = 'typing-indicator';
+            indicator.id = 'typingIndicator';
+            indicator.innerHTML = `<span></span><span></span><span></span>${agentName ? ` <small>${agentName} is typing...</small>` : ''}`;
+            messagesDiv.appendChild(indicator);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         function openAgentModal(agentId = null) {
             const modal = document.getElementById('agentModal');
-            const title = document.getElementById('modalTitle');
+            const title = document.getElementById('agentModalTitle');
             const debugInfo = document.getElementById('agentDebugInfo');
             debugInfo.style.display = 'none';
-            
+
             const modelSelect = document.getElementById('agentModel');
             modelSelect.innerHTML = '<option value="">Select model...</option>';
 
             if (agentId) {
                 title.textContent = 'Edit Agent';
                 const agent = agents[agentId];
-                document.getElementById('agentId').value = agentId;
+                document.getElementById('editAgentId').value = agentId;
                 document.getElementById('agentName').value = agent.name;
                 document.getElementById('agentDescription').value = agent.description || '';
                 document.getElementById('agentPrompt').value = agent.systemPrompt;
                 document.getElementById('agentApiUrl').value = agent.apiUrl || '';
                 document.getElementById('agentApiKey').value = agent.apiKey || '';
-                
+
                 if (agent.model) {
                     const opt = document.createElement('option');
                     opt.value = agent.model;
@@ -929,7 +1293,7 @@
                 }
             } else {
                 title.textContent = 'Create New Agent';
-                document.getElementById('agentId').value = '';
+                document.getElementById('editAgentId').value = '';
                 document.getElementById('agentName').value = '';
                 document.getElementById('agentDescription').value = '';
                 document.getElementById('agentPrompt').value = '';
@@ -945,7 +1309,7 @@
         }
 
         async function saveAgent() {
-            const id = document.getElementById('agentId').value || document.getElementById('agentName').value.toLowerCase().replace(/\s+/g, '-');
+            const id = document.getElementById('editAgentId').value || document.getElementById('agentName').value.toLowerCase().replace(/\s+/g, '-');
             const name = document.getElementById('agentName').value.trim();
             const description = document.getElementById('agentDescription').value.trim();
             const systemPrompt = document.getElementById('agentPrompt').value.trim();
@@ -954,16 +1318,16 @@
             const model = document.getElementById('agentModel').value.trim();
 
             if (!name || !systemPrompt) {
-                alert('Please fill in required fields (name and system prompt)');
+                alert('Please fill in name and system prompt');
                 return;
             }
 
             if (!apiUrl || !apiKey || !model) {
-                alert('Please configure API settings (URL, Key, and Model)');
+                alert('Please configure API settings');
                 return;
             }
 
-            const isEditing = !!document.getElementById('agentId').value;
+            const isEditing = !!document.getElementById('editAgentId').value;
 
             try {
                 const response = await fetch(isEditing ? `/api/agents/${id}` : '/api/agents', {
@@ -975,46 +1339,14 @@
                 const data = await response.json();
                 if (data.success) {
                     agents[id] = data.agent;
+                    saveAllData();
                     renderAgentList();
-                    updateAgentSelector();
                     closeAgentModal();
-
-                    if (id === currentAgentId) {
-                        selectAgent(id);
-                    }
                 } else {
-                    alert('Failed to save agent: ' + data.error);
+                    alert('Failed: ' + data.error);
                 }
             } catch (error) {
-                alert('Error saving agent:', error);
-            }
-        }
-
-        function editAgent(id) {
-            openAgentModal(id);
-        }
-
-        async function deleteAgent(id) {
-            if (!confirm('Are you sure you want to delete this agent?')) return;
-
-            try {
-                const response = await fetch(`/api/agents/${id}`, {
-                    method: 'DELETE'
-                });
-
-                const data = await response.json();
-                if (data.success) {
-                    delete agents[id];
-                    if (currentAgentId === id) {
-                        selectAgent('default');
-                    }
-                    renderAgentList();
-                    updateAgentSelector();
-                } else {
-                    alert('Failed to delete agent: ' + data.error);
-                }
-            } catch (error) {
-                alert('Error deleting agent:', error);
+                alert('Error: ' + error.message);
             }
         }
 
@@ -1024,11 +1356,11 @@
             const model = document.getElementById('agentModel').value.trim();
 
             if (!apiUrl || !apiKey) {
-                showAgentDebug('Please enter API URL and Key first', 'error');
+                showAgentDebug('Enter API URL and Key first', 'error');
                 return;
             }
 
-            showAgentDebug('Testing API connection...', 'info');
+            showAgentDebug('Testing...', 'info');
 
             try {
                 const response = await fetch(`${apiUrl}/v1/chat/completions`, {
@@ -1045,14 +1377,9 @@
                 });
 
                 const data = await response.json();
-
-                if (response.ok) {
-                    showAgentDebug('✓ API connection successful!', 'success');
-                } else {
-                    showAgentDebug(`✗ API error: ${data.error?.message || 'Unknown error'}`, 'error');
-                }
+                showAgentDebug(response.ok ? '✓ Success!' : `✗ ${data.error?.message || 'Error'}`, response.ok ? 'success' : 'error');
             } catch (error) {
-                showAgentDebug(`✗ Network error: ${error.message}`, 'error');
+                showAgentDebug(`✗ ${error.message}`, 'error');
             }
         }
 
@@ -1061,7 +1388,7 @@
             const apiKey = document.getElementById('agentApiKey').value.trim();
 
             if (!apiUrl || !apiKey) {
-                showAgentDebug('Please enter API URL and Key first', 'error');
+                showAgentDebug('Enter API URL and Key first', 'error');
                 return;
             }
 
@@ -1076,28 +1403,21 @@
 
                 const data = await response.json();
 
-                if (data.success && data.models && data.models.length > 0) {
+                if (data.success && data.models?.length > 0) {
                     const modelSelect = document.getElementById('agentModel');
-                    const currentValue = modelSelect.value;
                     modelSelect.innerHTML = '<option value="">Select model...</option>';
-                    
                     data.models.forEach(m => {
                         const opt = document.createElement('option');
-                        opt.value = String(m);
-                        opt.textContent = String(m);
+                        opt.value = m;
+                        opt.textContent = m;
                         modelSelect.appendChild(opt);
                     });
-                    
-                    if (currentValue) {
-                        modelSelect.value = currentValue;
-                    }
-                    
-                    showAgentDebug(`✓ Found ${data.models.length} models.`, 'success');
+                    showAgentDebug(`✓ Found ${data.models.length} models`, 'success');
                 } else {
-                    showAgentDebug(`✗ Failed: ${data.error || 'Unknown error'}`, 'error');
+                    showAgentDebug(`✗ ${data.error || 'Failed'}`, 'error');
                 }
             } catch (error) {
-                showAgentDebug(`✗ Network error: ${error.message}`, 'error');
+                showAgentDebug(`✗ ${error.message}`, 'error');
             }
         }
 
@@ -1108,161 +1428,7 @@
             debugInfo.innerHTML = `<span style="color: ${color};">${message}</span>`;
         }
 
-        function handleKeyPress(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                sendMessage();
-            }
-        }
-
-        function renderChatHistory() {
-            const messagesDiv = document.getElementById('messages');
-            const agent = agents[currentAgentId] || { name: 'Assistant' };
-
-            if (chatHistory.length === 0) {
-                messagesDiv.innerHTML = `
-                    <div class="message assistant">
-                        <div class="sender">${agent.name}</div>
-                        Hello! I'm ${agent.name}. Start a new session to begin chatting!
-                    </div>
-                `;
-                return;
-            }
-
-            messagesDiv.innerHTML = '';
-            chatHistory.forEach(msg => {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${msg.role}`;
-                messageDiv.innerHTML = `
-                    <div class="sender">${msg.role === 'user' ? 'You' : agent.name}</div>
-                    ${escapeHtml(msg.content)}
-                `;
-                messagesDiv.appendChild(messageDiv);
-            });
-        }
-
-        function updateContextCount() {
-            const count = document.getElementById('contextCount');
-            count.textContent = chatHistory.length;
-        }
-
-        function clearContext() {
-            if (chatHistory.length === 0) return;
-
-            if (confirm('Clear all conversation context? This cannot be undone.')) {
-                chatHistory = [];
-                saveCurrentSession();
-                renderChatHistory();
-                updateContextCount();
-            }
-        }
-
-        async function sendMessage() {
-            const agent = agents[currentAgentId];
-
-            if (!agent.apiUrl || !agent.apiKey || !agent.model) {
-                const errorMsg = document.createElement('div');
-                errorMsg.className = 'message error';
-                errorMsg.innerHTML = '<div class="sender">Error</div>Please configure API settings for this agent first';
-                document.getElementById('messages').appendChild(errorMsg);
-                document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
-                return;
-            }
-
-            if (!currentSessionId) {
-                currentSessionId = createNewSession(currentAgentId, 'New Chat');
-                renderSessionList();
-            }
-
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-
-            if (!message) return;
-
-            const messagesDiv = document.getElementById('messages');
-            const userMessage = document.createElement('div');
-            userMessage.className = 'message user';
-            userMessage.innerHTML = `<div class="sender">You</div>${escapeHtml(message)}`;
-            messagesDiv.appendChild(userMessage);
-
-            chatHistory.push({ role: 'user', content: message });
-            saveCurrentSession();
-            renderSessionList();
-            input.value = '';
-
-            const typingIndicator = document.createElement('div');
-            typingIndicator.className = 'typing-indicator';
-            typingIndicator.innerHTML = '<span></span><span></span><span></span>';
-            messagesDiv.appendChild(typingIndicator);
-            typingIndicator.style.display = 'block';
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-            const sendBtn = document.getElementById('sendBtn');
-            sendBtn.disabled = true;
-
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        message: message,
-                        agentId: currentAgentId,
-                        history: chatHistory.slice(-MAX_HISTORY)
-                    })
-                });
-
-                const data = await response.json();
-                typingIndicator.remove();
-
-                if (data.success) {
-                    const assistantMessage = document.createElement('div');
-                    assistantMessage.className = 'message assistant';
-                    assistantMessage.innerHTML = `<div class="sender">${data.agent.name}</div>${escapeHtml(data.message)}`;
-                    messagesDiv.appendChild(assistantMessage);
-                    chatHistory.push({ role: 'assistant', content: data.message });
-                    saveCurrentSession();
-                    updateContextCount();
-                    renderSessionList();
-                } else {
-                    const errorMessage = document.createElement('div');
-                    errorMessage.className = 'message error';
-                    errorMessage.innerHTML = `<div class="sender">Error</div>${escapeHtml(data.error)}`;
-                    messagesDiv.appendChild(errorMessage);
-                }
-            } catch (error) {
-                typingIndicator.remove();
-                const errorMessage = document.createElement('div');
-                errorMessage.className = 'message error';
-                errorMessage.innerHTML = '<div class="sender">Error</div>Network error. Please try again.';
-                messagesDiv.appendChild(errorMessage);
-            }
-
-            sendBtn.disabled = false;
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        document.getElementById('currentAgent').addEventListener('change', (e) => {
-            selectAgent(e.target.value);
-        });
-
-        loadAgents().then(() => {
-            if (currentAgentId) {
-                const sessions = getAllSessions();
-                const agentSessions = sessions[currentAgentId] || {};
-                const sessionIds = Object.keys(agentSessions);
-                
-                if (sessionIds.length > 0) {
-                    switchSession(sessionIds[0]);
-                }
-            }
-            renderSessionList();
-        });
+        loadData();
     </script>
 </body>
 </html>
