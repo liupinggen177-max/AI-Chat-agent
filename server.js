@@ -7,6 +7,7 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const AGENTS_FILE = path.join(__dirname, 'agents.json');
+const SESSIONS_FILE = path.join(__dirname, 'sessions.json');
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
@@ -47,7 +48,30 @@ function saveAgentConfigs(configs) {
   }
 }
 
+function loadSessions() {
+  try {
+    if (fs.existsSync(SESSIONS_FILE)) {
+      const data = fs.readFileSync(SESSIONS_FILE, 'utf8');
+      const parsed = JSON.parse(data);
+      console.log('Sessions loaded from file');
+      return parsed;
+    }
+  } catch (err) {
+    console.error('Failed to load sessions:', err);
+  }
+  return [];
+}
+
+function saveSessions(sessions) {
+  try {
+    fs.writeFileSync(SESSIONS_FILE, JSON.stringify(sessions, null, 2), 'utf8');
+  } catch (err) {
+    console.error('Failed to save sessions:', err);
+  }
+}
+
 let agentConfigs = loadAgentConfigs();
+let sessions = loadSessions();
 
 app.post('/api/chat', async (req, res) => {
   try {
@@ -343,6 +367,48 @@ app.post('/api/models', async (req, res) => {
       success: false,
       error: error.message || 'Failed to fetch models'
     });
+  }
+});
+
+app.get('/api/sessions', (req, res) => {
+  res.json({
+    success: true,
+    sessions: sessions
+  });
+});
+
+app.post('/api/sessions', (req, res) => {
+  try {
+    const { session } = req.body;
+    if (!session) {
+      return res.status(400).json({ success: false, error: 'Session is required' });
+    }
+
+    const existingIndex = sessions.findIndex(s => s.id === session.id);
+    if (existingIndex > -1) {
+      sessions[existingIndex] = session;
+    } else {
+      sessions.push(session);
+    }
+
+    saveSessions(sessions);
+    res.json({ success: true, session });
+  } catch (error) {
+    console.error('Save session error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.delete('/api/sessions/:id', (req, res) => {
+  const id = decodeURIComponent(req.params.id);
+  const initialLength = sessions.length;
+  sessions = sessions.filter(s => s.id !== id);
+
+  if (sessions.length < initialLength) {
+    saveSessions(sessions);
+    res.json({ success: true });
+  } else {
+    res.status(404).json({ success: false, error: 'Session not found' });
   }
 });
 

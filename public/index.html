@@ -1085,10 +1085,16 @@
                 console.error('Failed to load agents:', error);
             }
 
-            const savedData = getAllData();
-            sessions = savedData.sessions || [];
-            if (savedData.agents) {
-                agents = { ...savedData.agents, ...agents };
+            try {
+                const response = await fetch('/api/sessions');
+                const data = await response.json();
+                if (data.success && data.sessions) {
+                    sessions = data.sessions;
+                }
+            } catch (error) {
+                console.error('Failed to load sessions:', error);
+                const savedData = getAllData();
+                sessions = savedData.sessions || [];
             }
 
             renderSessionList();
@@ -1214,11 +1220,23 @@
             };
 
             sessions.push(session);
-            saveAllData();
+            saveSessionToServer(session);
             selectedGroupMembers = [];
             closeGroupModal();
             renderSessionList();
             selectSession(session.id);
+        }
+
+        async function saveSessionToServer(session) {
+            try {
+                await fetch('/api/sessions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session })
+                });
+            } catch (error) {
+                console.error('Failed to save session:', error);
+            }
         }
 
         function closeGroupModal() {
@@ -1281,7 +1299,7 @@
                 }
             });
 
-            saveAllData();
+            saveSessionToServer(session);
             renderChat();
             renderSessionList();
             closeAddMemberModal();
@@ -1325,12 +1343,22 @@
                 currentSessionId = null;
                 currentSessionType = null;
             }
-            saveAllData();
+            deleteSessionFromServer(id);
             renderSessionList();
             if (!currentSessionId) {
                 document.getElementById('messages').innerHTML = '<div style="text-align: center; color: #888; padding: 50px;">Select a session or create a new group chat to start</div>';
                 document.getElementById('chatTitle').textContent = 'Select a session';
                 document.getElementById('chatMembers').textContent = '';
+            }
+        }
+
+        async function deleteSessionFromServer(id) {
+            try {
+                await fetch(`/api/sessions/${encodeURIComponent(id)}`, {
+                    method: 'DELETE'
+                });
+            } catch (error) {
+                console.error('Failed to delete session:', error);
             }
         }
 
@@ -1606,7 +1634,7 @@
                 appendMessage('error', 'Network error');
             }
 
-            saveAllData();
+            saveSessionToServer(session);
         }
 
         async function sendGroupMessage(session, message, files = []) {
@@ -1633,7 +1661,7 @@
                 hideTypingIndicator();
                 appendMessage('assistant', 'Please mention an agent with @name to get a response', null, true);
                 session.history.push({ role: 'assistant', content: 'Please mention an agent with @name to get a response', agentId: null, isGroup: true });
-                saveAllData();
+                saveSessionToServer(session);
                 return;
             }
 
@@ -1683,7 +1711,7 @@
                 }
             }
 
-            saveAllData();
+            saveSessionToServer(session);
         }
 
         function showTypingIndicator(agentName = '') {
